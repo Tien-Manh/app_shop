@@ -636,10 +636,11 @@ class HomeController extends Controller
 
     function __construct(){
         $getDate = date('Y-m-d');
-        $countPoin =  DB::table('countpoin')->first();
-
-            if ($getDate > $countPoin->time){
-                $countPoin->delete();
+        $countPoin =  DB::table('countpoin')->get();
+            foreach ($countPoin as $val){
+                if ($getDate > $val->time){
+                    DB::table('countpoin')->where('id', $val->id)->delete();
+                }
             }
         }
 

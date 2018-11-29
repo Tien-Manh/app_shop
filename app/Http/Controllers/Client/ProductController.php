@@ -63,7 +63,7 @@ class ProductController extends Controller
         $countPoin =  DB::table('countpoin')->first();
 
         if ($getDate > $countPoin->time){
-            $countPoin->delete();
+            $countPoin::delete();
         }
     }
 
@@ -351,10 +351,15 @@ class ProductController extends Controller
                 ->where('product_active', 0)
                 ->paginate($listcount);
         }
-            if ($rq->ajax()){
-                return response()->json(view('view.product_ajax')->with('products', $products)->render());
-            }
-        return view('view.products', ['title' => $title, 'products' => $products, 'category' => $category]);
+        $results = '';
+        if (count($products) == 0){
+            $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+            return $results;
+        }
+        if ($rq->ajax()){
+            return response()->json(view('view.product_ajax')->with('products', $products)->render());
+        }
+        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
     }
     function searchPr(Request $rq){
         $title = 'Tìm kiếm';
@@ -407,10 +412,6 @@ class ProductController extends Controller
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
                 ->where('product_name', 'LIKE', "%$result%")
-                ->orwhere('price', 'LIKE', "%$result%")
-                ->orwhere('color', 'LIKE', "%$result%")
-                ->orwhere('brand', 'LIKE', "%$result%")
-                ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
         }
         if (count($products) == 0){

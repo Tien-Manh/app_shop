@@ -45,6 +45,8 @@
                     <div class="row" id="single_product">
                         @if (count($products) > 0)
                             @include('view.product_ajax')
+                        @elseif($results != '')
+                            {{$results}}
                         @else
                             <p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có sản phẩm nào !</p>
                         @endif
