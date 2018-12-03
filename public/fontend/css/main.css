@@ -12,7 +12,9 @@
   background-color: #f41068;
   color: #fff;
 }
-
+.active{
+    color: crimson !important;
+}
 /*nav*/
 .ttt{
     top: 44px;
@@ -3201,9 +3203,6 @@ h1, h2, h3, h4, h5, h6 {
   -moz-transition: all 0.3s linear;
   -o-transition: all 0.3s linear;
   transition: all 0.3s linear;
-}
-.single-product .content {
-  background-color: red;
 }
 /* line 472, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_home.scss */
 .bottom a {

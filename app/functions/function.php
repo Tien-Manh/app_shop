@@ -6,7 +6,7 @@ function showCate($data, $parent = 0, $str = '', $select = 2){
         $name = $val->cate_name;
         if ($val->parent_id == $parent){
            if($select != -1 && $id == $select){
-               echo "<option value='$id' selected='selected'>$str.$name</option>";
+               echo "<option value='$id' selected='selected'>$str $name</option>";
            }
            else{
                if ($parent == 0){

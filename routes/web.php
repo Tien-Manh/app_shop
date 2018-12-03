@@ -35,6 +35,8 @@ Route::group(['middleware' => ['auth', 'author.role'], 'prefix' => 'admin-cp'], 
 	Route::get('orders', 'Client\HomeController@showOreder')->name('show.order');
 	Route::get('orders/{id}', 'Client\HomeController@showOrederDetail')->name('show.orderDetail');
 	Route::get('baner', 'Client\HomeController@Showbaner')->name('show.baner');
+	Route::get('categories/comment/delete/{id}', 'Client\HomeController@deletecm')->name('delete.cm');
+	Route::get('categories/commentrp/delete/{id}', 'Client\HomeController@deletecmrp')->name('delete.cmrp');
 
 	//active
     Route::get('save-active', 'Client\HomeController@SaveActive');
@@ -99,7 +101,6 @@ Route::group(['middleware' => ['web']], function (){
 
 //End Quan-tri-vien
 
-Route::get('test', 'Client\ProductController@test');
 // wiews
 Route::get('/', 'Client\HomeController@ViewShow')->name('view.show');
 Route::get('product/{product_slug}', 'Client\HomeController@viewsDetail')->name('view.show.detail');
@@ -107,6 +108,7 @@ Route::get('products', 'Client\ProductController@showProducts')->name('show.prod
 Route::get('products/ajax', 'Client\ProductController@AjaxshowProducts')->name('search.ajax');
 Route::get('categories/{cate_slug}', 'Client\CategoriController@showCateView')->name('show.cates');
 Route::get('sreach', 'Client\ProductController@searchPr')->name('show.search');
+Route::get('giam-gia', 'Client\ProductController@saLe')->name('show.sale');
 
 
 

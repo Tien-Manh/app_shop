@@ -8,18 +8,20 @@ use App\Categories;
 use Validator;
 use DB;
 use File;
-
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 class CategoriController extends Controller
 {
     function ShowCate(){
-         $cate = Categories::all();
-    	return view('admin.admin-categories', ['cate' => $cate]);
+        $cate = Categories::all();
+        return view('admin.admin-categories', ['cate' => $cate]);
     }
     function ShowlistCp($slug){
         $cate = Categories::where('cate_slug', $slug)->firstOrFail();
         $products = DB::table('product_details')->join('products', 'products.id',
             '=', 'product_details.product_id')->where('cate_id', $cate->id)->get();
-       return view('admin.ajax.productlist-shop', ['products' => $products]);
+        return view('admin.ajax.productlist-shop', ['products' => $products]);
     }
     function SaveActionCate(Request $rq){
         $cate = Categories::find($rq['getId']);
@@ -33,6 +35,10 @@ class CategoriController extends Controller
         $listcount = 9;
         $colum = 'products.id';
         $desc = $rq['desc'];
+        $brand = $rq['brand'];
+        $color = $rq['color'];
+        $firstval = $rq['firstval'];
+        $lastval = $rq['lastval'];
         if ($desc == ''){
             $desc = 'asc';
         }
@@ -52,14 +58,231 @@ class CategoriController extends Controller
         }
         $category = Categories::where('cate_active', 0)->get();
         $cate = Categories::where('cate_slug', $id)->first();
-        $products = DB::table('product_details')
-            ->join('products', 'products.id',
-                '=', 'product_details.product_id')->orderBy($colum, $desc)
-            ->where('product_active', 0)->where('cate_id', $cate->id)->paginate($listcount);
+        $product = [];
+        $productsOjb = new Collection();
+        $results = '';
+        foreach ($category as $key => $val){
+            if ($val->parent_id == $cate->id){
+                if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $val->id)
+                        ->whereBetween('price', [$firstval, $lastval])
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->get();
+
+                }
+                elseif ($brand != '' && $color != ''){
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->where('cate_id', $val->id)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                }
+                elseif ($brand != ''){
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $val->id)
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                }
+                elseif ($color != ''){
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('color', $color)
+                        ->where('cate_id', $val->id)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                }
+                elseif ($firstval != '' || $lastval != ''){
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->whereBetween('sell_price', [$firstval, $lastval])
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $val->id)
+                        ->get();
+                }
+                else {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id',  $val->id)
+                        ->get();
+                }
+
+            }
+            else{
+                if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
+                    if ($val->parent_id == $cate->id){
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('cate_id', $val->id)
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->get();
+                    }
+                    else{
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->where('cate_id', $cate->id)
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)->paginate($listcount);
+                    }
+                }
+                elseif ($brand != '' && $color != ''){
+                    if ($val->parent_id == $cate->id){
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->where('cate_id', $val->id)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    }
+                    else{
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->where('cate_id', $cate->id)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+                    }
+                }
+                elseif ($brand != ''){
+                    if ($val->parent_id == $cate->id){
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('cate_id', $val->id)
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    }
+                    else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('cate_id', $cate->id)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+                    }
+                }
+                elseif ($color != ''){
+                    if ($val->parent_id == $cate->id){
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('color', $color)
+                            ->where('cate_id', $val->id)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    }
+                    else{
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('color', $color)
+                            ->where('cate_id', $cate->id)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+                    }
+                }
+                elseif ($firstval != '' || $lastval != ''){
+                    if ($val->parent_id == $cate->id){
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->whereBetween('sell_price', [$firstval, $lastval])
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $val->id)
+                            ->get();
+                    }
+                    else{
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->whereBetween('sell_price', [$firstval, $lastval])
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $cate->id)
+                            ->paginate($listcount);
+                    }
+                }
+                else {
+                    $products = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $cate->id)
+                        ->paginate($listcount);
+                }
+
+            }
+        }
+        if (!empty($product)){
+            foreach($product as $items) {
+                foreach($items as $item)
+                {
+                    $perPage = $listcount;
+                    $productsOjb->push($item);
+                    $products = $this->paginate($productsOjb, $perPage);
+                }
+            }
+        }
+        if (!empty($product) && count($productsOjb) == 0){
+            $products = $this->paginate($productsOjb, 1);
+        }
+        if (count($products) == 0 && $rq->ajax()){
+            $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+            return $results;
+        }
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
+        return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
+    }
+    public function paginate($items, $perPage, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     function addCate(){
@@ -151,17 +374,17 @@ class CategoriController extends Controller
             'parent_id' => 'required|not_in:-1'
         ];
         $message = [
-                'cate_name.required' => 'Tên không được để trống',
-                'cate_name.min' => 'Tên phải từ 2 ký tự',
-                'cate_name.max' => 'Tên không quá 80 ký tự',
-                'cate_name.unique' => 'Tên này đã được dùng',
-                'cate_slug.required' => 'Đường dẫn không được để trống',
-                'cate_slug.min' => 'Đường dẫn phải từ 2 ký tự',
-                'cate_slug.max' => 'Đường dẫn không quá 80 ký tự',
-                'cate_slug.unique' => 'Đường dẫn này đã được dùng',
-                'cate_image.image' => 'Ảnh phải có định dạng .JPG, .JPEG, .PNG',
-                'cate_image.max' => 'Ảnh vượt quá kích cỡ cho phép',
-                'parent_id.required' => 'Chưa chọn danh mục cha'
+            'cate_name.required' => 'Tên không được để trống',
+            'cate_name.min' => 'Tên phải từ 2 ký tự',
+            'cate_name.max' => 'Tên không quá 80 ký tự',
+            'cate_name.unique' => 'Tên này đã được dùng',
+            'cate_slug.required' => 'Đường dẫn không được để trống',
+            'cate_slug.min' => 'Đường dẫn phải từ 2 ký tự',
+            'cate_slug.max' => 'Đường dẫn không quá 80 ký tự',
+            'cate_slug.unique' => 'Đường dẫn này đã được dùng',
+            'cate_image.image' => 'Ảnh phải có định dạng .JPG, .JPEG, .PNG',
+            'cate_image.max' => 'Ảnh vượt quá kích cỡ cho phép',
+            'parent_id.required' => 'Chưa chọn danh mục cha'
         ];
         $add = Validator::make($rq->all(), $rule, $message);
         if ($add->passes()) {

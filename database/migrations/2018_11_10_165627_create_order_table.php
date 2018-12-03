@@ -19,7 +19,6 @@ class CreateOrderTable extends Migration
             $table->integer('user_id')->nullable();
             $table->date('date_order');
             $table->integer('total');
-            $table->integer('post_discount');
             $table->string('deal');
             $table->string('payment')->nullable();
             $table->integer('order_active');

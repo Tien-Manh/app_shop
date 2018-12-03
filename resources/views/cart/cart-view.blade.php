@@ -1,5 +1,5 @@
 @extends('layout.layout-fontend.index')
-@section('title', 'Chi tiết sản phẩm')
+@section('title', 'Giỏ hàng')
 @section('baner')
     @include('layout.layout-fontend.baner-sub', ['name_show' => 'Giỏ hàng', 'name_page' => 'Trang Giỏ Hàng'])
 @endsection
@@ -52,7 +52,11 @@
                         </div>
                         <div class="col-md-2 col-12">
                             <div class="total">{{number_format($cart['price'] * $cart['quantity'], 0, ',', '.')}} VNĐ</div>
-                            <?php $total += $cart['quantity']*$cart['price'] ?>
+                       @if (!empty($countPoin))
+                                <?php $total += $cart['quantity']*$cart['price'] * (100 - $countPoin->count_price)/100?>
+                          @else
+                                <?php $total += $cart['quantity']*$cart['price']?>
+                            @endif
                         </div>
                         <div class="col-md-2 col-12">
                             <div class="text-center">

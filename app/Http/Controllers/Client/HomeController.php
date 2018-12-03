@@ -336,8 +336,10 @@ class HomeController extends Controller
     }
     function showCart(){
         $carts = Session::get('cartshop');
+        $getSe = Session::get('countpoin');
+        $countPoin =  DB::table('countpoin')->where('code', $getSe)->first();
         $total = 0;
-        return view('cart.cart-view', ['carts' => $carts, 'total' => $total]);
+        return view('cart.cart-view', ['countPoin' => $countPoin, 'carts' => $carts, 'total' => $total]);
     }
     function checkOunt(Request $rq){
         if (Auth::user()){
@@ -350,17 +352,19 @@ class HomeController extends Controller
         if ($address == null){
             $address = new MemberAddress();
         }
+        $getSe = Session::get('countpoin');
+        $countPoin =  DB::table('countpoin')->where('code', $getSe)->first();
         $showDiv = $rq->brand;
         $carts = Session::get('cartshop');
         $total = 0;
 
-        return view('cart.checkout-cart', ['address' => $address, 'user' => $user, 'showDiv' => $showDiv, 'carts' => $carts, 'total' => $total]);
+        return view('cart.checkout-cart', ['countPoin' => $countPoin, 'address' => $address, 'user' => $user, 'showDiv' => $showDiv, 'carts' => $carts, 'total' => $total]);
     }
     function saveCart(Request $rq){
        $carts = Session::get('cartshop');
        $getSe = Session::get('countpoin');
        $total = 0;
-       $totalcode = 0;
+       $valueBrand = 0;
        $brand = '';
         if (Auth::user()){
             $user = Auth::user()->id;
@@ -374,21 +378,22 @@ class HomeController extends Controller
                 }
                 elseif ($rq->brand == 1){
                     $brand .= "Giao hàng trong ngày";
+                    $valueBrand = 50000;
                 }
                 elseif ($rq->brand == 2){
                     $brand .= "Giao hàng địa phương";
+                    $valueBrand = 30000;
                 }
 
             for ($i=0; $i < count($carts); $i++){
-                $total += $carts[$i]['price'] * $carts[$i]['quantity'];
+                if (!empty($getSe)){
+                    $countPoin =  DB::table('countpoin')->where('code', $getSe)->first();
+                    $total += $carts[$i]['quantity']*$carts[$i]['price'] * (100 - $countPoin->count_price)/100;
+                }
+                else{
+                    $total += $carts[$i]['price'] * $carts[$i]['quantity'];
+                }
              }
-            if (!empty($getSe)){
-              $countPoin =  DB::table('countpoin')->where('code', $getSe)->first();
-               $totalcode = $total - (($total * $countPoin->count_price)/100);
-            }
-            else{
-                $totalcode = '';
-            }
 
             $customer = new Customer();
             $customer->first_name = $rq->first_name;
@@ -404,9 +409,8 @@ class HomeController extends Controller
             $order = new Order();
             $order->customer_id = $customer->id;
             $order->user_id = $user;
-            $order->post_discount = $totalcode;
             $order->date_order = $rq->date_order;
-            $order->total = $total;
+            $order->total = $total + $valueBrand;
             $order->deal = $brand;
             $order->order_active = 0;
             $order->message = $rq->message;
@@ -422,6 +426,7 @@ class HomeController extends Controller
                 $orderDetail->save();
             }
             session()->pull('cartshop', 'default');
+            session()->pull('countpoin', 'default');
             Session::save();
             return redirect()->back()->with('msg', 'Đặt thành công');
         }
@@ -595,6 +600,23 @@ class HomeController extends Controller
             $comment_reply->save();
             return redirect()->back();
         }
+    }
+
+    function deletecm($id){
+        $commen = Comments::find($id);
+        $commenrp = CommentReply::where('comment_id', $id)->get();
+        if (count($commenrp) > 0){
+            foreach ($commenrp as $val){
+                $val->delete();
+            }
+        }
+        $commen->delete();
+        return redirect()->back();
+    }
+    function deletecmrp($id){
+       $commenrp = CommentReply::find($id);
+       $commenrp->delete();
+       return redirect()->back();
     }
 
     function codecountAdd(){

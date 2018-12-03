@@ -79,7 +79,7 @@
                 <div class="content">
                     <a href="{{route('view.show.detail', ['id' => $value->product_slug])}}">
                         <div class="content-overlay"></div>
-                        <img class="content-image img-fluid d-block mx-auto" src="{{asset('assets/image/product_image/' . $value->product_image)}}" alt="">
+                        <img class="content-image img-fluid d-block mx-auto" src="{{asset('assets/image/image_crop/' . $value->product_image)}}" alt="">
                     </a>
                     <div class="content-details fadeIn-bottom">
                         <div class="bottom d-flex align-items-center justify-content-center">

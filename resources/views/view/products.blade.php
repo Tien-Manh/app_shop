@@ -76,7 +76,7 @@
                     <ul class="main-categories" id="style-4">
                         @if (!empty($category))
                             @foreach ($category as $val)
-                                <li class="main-nav-list"><a href="{{route('show.cates', ['id' => $val->cate_slug])}}" aria-expanded="false" aria-controls="fruitsVegetable"><span class="lnr lnr-arrow-right"></span>{{$val->cate_name}}<span class="number"> (<?php echo count(\App\Products::where('cate_id', $val->id)->where('product_active', 0)->get()) ?>)</span></a>
+                                <li class="main-nav-list"><a href="{{route('show.cates', ['id' => $val->cate_slug])}}" aria-expanded="false" aria-controls="fruitsVegetable"><span class="lnr lnr-arrow-right"></span>{{$val->cate_name}}<span class="number"> ({{\App\Http\Controllers\Client\ProductController::counCate($val->cate_slug)}})</span></a>
                                 </li>
                             @endforeach
                         @endif
@@ -88,11 +88,13 @@
                         <div class="head">Nhãn hiệu</div>
                         <form>
                             <ul>
-                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="DIOR" id="apple" name="brand"><label for="apple">DIOR<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="dior" id="apple" name="brand"><label for="apple">DIOR<span></span></label></li>
                                 <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="chanel" id="asus" name="brand"><label for="asus">CHANEL<span></span></label></li>
                                 <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="louis vuitton" id="gionee" name="brand"><label for="gionee">LOUIS VUITTON<span></span></label></li>
                                 <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="balenciaga" id="micromax" name="brand"><label for="micromax">BALENCIAGA<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="ba&sh" id="samsung" name="brand"><label for="samsung">BA&SH<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="ninomaxx" id="samsunga" name="brand"><label for="samsunga">NINOMAXX<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="juno" id="samsungsa" name="brand"><label for="samsungsa">JUNO<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="random" id="samsungg" name="brand"><label for="samsungg">KHÁC<span></span></label></li>
                             </ul>
                         </form>
                     </div>
@@ -100,12 +102,13 @@
                         <div class="head">Màu</div>
                         <form action="#">
                             <ul>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="black" name="color" value="black"><label for="black">Black<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="balckleather" name="color" value="black leather"><label for="balckleather">Black Leather<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="blackred" name="color" value="black with red"><label for="blackred">Black with red<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="gold" name="color" value="gold"><label for="gold">Gold<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="red" name="color" value="red"><label for="red">Red<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="spacegrey" name="color" value="spacegrey"><label for="spacegrey">Spacegrey<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="black" name="color" value="black"><label for="black">Đen<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="blue" name="color" value="blue"><label for="blue">Xanh lam<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="gray" name="color" value="gray"><label for="gray">Xám<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="green" name="color" value="green"><label for="green">Xanh lục<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="red" name="color" value="red"><label for="red">Đỏ<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="violet" name="color" value="violet"><label for="violet">Tím<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="random" name="color" value="random"><label for="random">Khác<span></span></label></li>
                             </ul>
                         </form>
                     </div>

@@ -148,7 +148,6 @@
                                     <th>Ngày nhận</th>
                                     <th>Hình thức</th>
                                     <th>Tổng tiền</th>
-                                    <th>Tổng tiền sau triết khấu</th>
                                     <th>Trạng thái</th>
                                     <th style="text-align: center">Hành động</th>
                                 </tr>
@@ -164,11 +163,6 @@
                                         <td>{{$value->date_order}}</td>
                                         <td>{{$value->deal}}</td>
                                         <td>{{number_format($value->total, 0, '', '.')}} VNĐ</td>
-                                       @if($value->post_discount  == '' || $value->post_discount == 0)
-                                            <td>Không</td>
-                                        @else
-                                            <td>{{number_format($value->post_discount, 0, '', '.')}} VNĐ</td>
-                                        @endif
                                         @if($value->order_active == 0)
                                           <td class="text-danger">Đang chờ</td>
                                         @elseif($value->order_active == 1)

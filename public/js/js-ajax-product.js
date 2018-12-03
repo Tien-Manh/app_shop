@@ -73,6 +73,9 @@ $('#formProduct').on('submit', function (e) {
                     $('.error').hide();
                     $('.fixctp').val('');
                     $('.fixctrt').val('0');
+                    var rem = $('#result')[0];
+                    rem.parentNode.removeChild(rem);
+
                 }
                 else {
                     $('.successErr').text('Dữ liệu đã được cập nhật');

@@ -153,7 +153,7 @@
                                             <div class="form-body">
                                                 <input type="hidden" id="{{$product->id}}" value="{{$product->id}}" class="inputIdpr" name="id">
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Tên sản phẩm: <span class="required">
+                                                    <label class="col-md-2 control-label">Tên: <span class="required">
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
@@ -201,13 +201,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Thuộc: <span class="required">
+                                                    <label class="col-md-2 control-label">Loại: <span class="required">
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <label style="position: relative; top: -10px !important;" class="radio-inline"><input type="radio" @if ($product->category_name == 1) checked @endif value="1" name="category_name" checked><span style="position: relative; top: 5px;">Đồ nữ</span></label>
                                                         <label style="position: relative; top: -10px !important;" class="radio-inline"><input type="radio" @if ($product->category_name == 2) checked @endif value="2" name="category_name"><span style="position: relative; top: 5px;">Đồ nam</span></label>
-                                                        <label style="position: relative; top: -10px !important;" class="radio-inline"><input type="radio" @if ($product->category_name == 3) checked @endif value="3" name="category_name"><span style="position: relative; top: 5px;">Đồ đôi</span></label>
                                                         <label style="position: relative; top: -10px !important;" class="radio-inline"><input type="radio" @if ($product->category_name == 0) checked @endif value="0" name="category_name"><span style="position: relative; top: 5px;">Khác</span></label>
                                                     </div>
                                                 </div>
@@ -221,8 +220,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Giá khuyến mãi: <span class="required">
-													* </span>
+                                                    <label class="col-md-2 control-label">Khuyến mãi: <span class="required">
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input value="{{$product->sell_price}}" type="number" class="form-control fixctp" name="sell_price" placeholder="">
@@ -231,7 +230,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Số lượng: <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input value="{{$product->amount}}" type="number" class="form-control fixctp" name="amount" placeholder="">
@@ -248,8 +247,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Ảnh thumb: <span class="required">
-													* </span>
+                                                    <label class="col-md-2 control-label">Ảnh mô tả: <span class="required">
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <div class="bg-danger" style="min-height: 165px;">
@@ -274,7 +273,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Hành động: <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <select class="table-group-action-input form-control input-medium" name="active">
@@ -288,17 +287,28 @@
                                         <div class="tab-pane" id="tab_detail">
                                             <div class="form-body">
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Nhãn hiệu: <span class="required">
+                                                    <label class="col-md-2 control-label">Thương hiệu: <span class="required">
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
-                                                        <input type="text" value="{{$product->brand}}" class="form-control fixctp brand" name="brand" placeholder="">
+                                                        <select class="table-group-action-input form-control" name="brand">
+                                                            <option selected disabled value="0">Chọn Thương Hiệu ...</option>
+                                                            <option @if($product->brand == 'dior') selected @endif value="dior">DIOR</option>
+                                                            <option @if($product->brand == 'chanel') selected @endif value="chanel">CHANEL</option>
+                                                            <option @if($product->brand == 'louis vuitton') selected @endif value="louis vuitton">LOUIS VUITTON</option>
+                                                            <option @if($product->brand == 'balenciaga') selected @endif value="balenciaga">BALENCIAGA</option>
+                                                            <option @if($product->brand == 'ninomaxx') selected @endif value="ninomaxx">NINOMAXX</option>
+                                                            <option @if($product->brand == 'juno') selected @endif value="juno">JUNO</option>
+                                                            <option @if($product->brand == 'random') selected @endif value="random">KHÁC</option>
+                                                        </select>
                                                         <span class="error err_brand"></span>
                                                     </div>
                                                 </div>
+
+
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Xuất xứ: <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input type="text" value="{{$product->madein}}" class="form-control fixctp madein" name="madein" placeholder="">
@@ -307,7 +317,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Loại: <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input type="text" value="{{$product->type}}" class="form-control fixctp width" name="type" placeholder="">
@@ -316,7 +326,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Trọng lượng : <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input type="number" value="{{$product->weight}}" class="form-control fixctp weight" name="weight" placeholder="">
@@ -324,11 +334,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-2 control-label">Kiểm tra chất lượng : <span class="required">
-													* </span>
+                                                    <label class="col-md-2 control-label">Kiểm tra chất lượng : <span class="required"></span>
                                                     </label>
                                                     <div class="col-md-10">
-                                                        <select class="table-group-action-input form-control input-medium" name="qualitycheck">
+                                                        <select class="table-group-action-input form-control" name="qualitycheck">
                                                             <option @if($product->qualitycheck == 0) selected @endif value="0">Có</option>
                                                             <option @if($product->qualitycheck == 1) selected @endif value="1">Không</option>
                                                         </select>
@@ -337,7 +346,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Độ mới : <span class="required">
-													* </span>
+													</span>
                                                     </label>
                                                     <div class="col-md-10">
                                                         <input value="{{$product->new}}" type="number" class="form-control fixctp new" name="new" placeholder="">
@@ -349,7 +358,16 @@
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
-                                                        <input value="{{$product->color}}" type="text" class="form-control fixctp" name="color" placeholder="">
+                                                        <select class="table-group-action-input form-control " name="color">
+                                                            <option selected disabled value="0">Chọn Màu...</option>
+                                                            <option @if($product->color == 'black') selected @endif value="black">Đen</option>
+                                                            <option @if($product->color == 'blue') selected @endif value="blue">Xanh lam</option>
+                                                            <option @if($product->color == 'gray') selected @endif value="gray">Xám</option>
+                                                            <option @if($product->color == 'green') selected @endif value="green">Xanh lục</option>
+                                                            <option @if($product->color == 'red') selected @endif value="red">Đỏ</option>
+                                                            <option @if($product->color == 'violet') selected @endif value="violet">Tím</option>
+                                                            <option @if($product->color == 'random') selected @endif value="random">KHÁC</option>
+                                                        </select>
                                                         <span class="error err_color"></span>
                                                     </div>
                                                 </div>
@@ -405,7 +423,6 @@
     </script>
     <script>
         window.onload = function(){
-
             //Check File API support
             if(window.File && window.FileList && window.FileReader)
             {

@@ -143,7 +143,7 @@
                         <div class="review-wrapper">
                             <div class="row">
                                 <div class="col-xl-7">
-                                    <div class="total-comment scrollbar" style="min-height: 120px;max-height: 540px !important; height: auto">
+                                    <div class="total-comment scrollbar" style="min-height: 120px;max-height: 540px !important; height: auto; word-wrap: break-word;">
                                       @if(count($comments) == 0)
                                             <p class="user-comment">Chưa có bình luận nào !</p>
                                           @else
@@ -163,6 +163,9 @@
                                                         @if (!Auth::user())
                                                             <div></div>
                                                         @else
+                                                            @if(Auth::user() && Auth::user()->role == 2)
+                                                            <a href="{{route('delete.cm', ['id' => $comment->id])}}" style="min-width: 20px;left: 50px;border-radius: 20px;overflow: hidden" class="view-btn color-2 ku order-2 order-sm-3"><span>Xóa</span></a>
+                                                            @endif
                                                             <button class="view-btn color-2 reply order-2 order-sm-3"><i class="fa fa-reply" aria-hidden="true"></i><span>Trả lời</span></button>
                                                         @endif
                                                     </div>
@@ -192,6 +195,9 @@
                                                                     <h5>{{$comment_repply->name}}</h5>
                                                                     <span>{{$comment_repply->created_at}}</span>
                                                                 </div>
+                                                                    @if(Auth::user() && Auth::user()->role == 2)
+                                                                    <a href="{{route('delete.cmrp', ['id' => $comment_repply->id])}}" style="min-width: 20px;left: 50px;border-radius: 20px;overflow: hidden" class="view-btn color-2 order-2 order-sm-3 ku"><span>Xóa</span></a>
+                                                                    @endif
                                                             </div>
                                                             <p class="user-comment">
                                                                 {{$comment_repply->reply_content}}
@@ -247,4 +253,14 @@
     <script src="{{asset('js/products-ajax.js')}}"></script>
     <script src="{{asset('fontend/js/g.js')}}"></script>
     <script src="{{asset('js/addcar.js')}}"></script>
+    <script>
+        $('.ku').click(function (e) {
+            if(confirm('Xác nhận xóa bình luận này !')) {
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        })
+    </script>
 @endsection

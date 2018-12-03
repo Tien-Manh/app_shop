@@ -2,6 +2,18 @@
 .toggle-button-demo {
   text-align: center;
 }
+.delimg {
+    position:relative;
+    top:8px;
+    right:25px;
+    background:black;
+    color:white;
+    border-radius:50px;
+    font-size:0.9em;
+    padding: 0 0.3em 0;
+    text-align:center;
+    cursor:pointer;
+}
 article
 {
     width: 100%;
@@ -18,8 +30,6 @@ article
 }
 .delimg{
     position: relative;
-    right: 21px;
-    top: -5px;
     cursor: pointer;
     float: left;
 }
@@ -51,8 +61,8 @@ article
 
 .thumbnail{
     float: left;
-    height: 80px;
-    margin: 10px;
+    width:70px;
+    height: 70px;
 }
 
 

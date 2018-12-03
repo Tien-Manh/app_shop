@@ -10,11 +10,47 @@ use App\Categories;
 use App\Products;
 use App\ProductDetails;
 use App\ProductImage;
+use PhpParser\Node\Expr\Cast\Array_;
 use Validator;
 use DB;
 use File;
+use Illuminate\Support\Collection;
+use Intervention\Image\ImageManagerStatic as Image;
 class ProductController extends Controller
 {
+public static function counCate($id)
+    {
+        $category = Categories::where('cate_active', 0)->get();
+        $cate = Categories::where('cate_slug', $id)->first();
+        foreach ($category as $key => $val) {
+            if ($val->parent_id == $cate->id) {
+                $product[$key] = DB::table('product_details')
+                    ->join('products', 'products.id',
+                        '=', 'product_details.product_id')
+                    ->where('product_active', 0)
+                    ->where('cate_id',  $val->id)
+                    ->get();
+            }
+            else{
+                $products = DB::table('product_details')
+                    ->join('products', 'products.id',
+                        '=', 'product_details.product_id')
+                    ->where('product_active', 0)
+                    ->where('cate_id',  $cate->id)
+                    ->get();
+            }
+        }
+        if (!empty($product)){
+            foreach($product as $items) {
+                foreach($items as $item)
+                {
+                    $products->push($item);
+                }
+            }
+        }
+        return count($products);
+    }
+
     function ShowProduct(){
         $products = DB::table('product_details')->join('products', 'products.id',
             '=', 'product_details.product_id')->get();
@@ -35,6 +71,7 @@ class ProductController extends Controller
         $filenamepr = $product->product_image;
         if ($filenamepr != null || $filenamepr != ''){
             File::delete('assets/image/product_image/' . $filenamepr);
+            File::delete('assets/image/image_crop/' . $filenamepr);
         }
         $product_detail->delete();
         $product->delete();
@@ -58,14 +95,6 @@ class ProductController extends Controller
         }
         return view('product.form', ['parent_cate' => $parent_cate, 'product' => $product, 'product_image' => $product_image, 'nameShow' => $nameShow]);
     }
-    function test(){
-        $getDate = date('Y-m-d');
-        $countPoin =  DB::table('countpoin')->first();
-
-        if ($getDate > $countPoin->time){
-            $countPoin::delete();
-        }
-    }
 
     function saveProduct(Request $rq){
         $filename = [];
@@ -78,14 +107,14 @@ class ProductController extends Controller
             'cate_id' => 'required|not_in:0',
             'price' => 'required|numeric|min:1000|max:9999999',
             'sell_price' => 'nullable|numeric|min:1000|lte:'.$valueprice.'|max:9999999',
-            'product_image' => 'image:jpg,jpeg,png|max:2024',
+            'product_image' => 'required|image:jpg,jpeg,png|max:2024|dimensions:min_width >= 450,min_height=600',
             'amount' => 'nullable|numeric|max:1000',
-            'brand' => 'nullable|max:20',
+            'brand' => 'required|not_in:0',
             'madein' => 'nullable|max:30',
             'type' => 'nullable|max:30',
             'weight' => 'nullable|numeric|max:3000',
             'new' => 'nullable|numeric|max:100',
-            'color' => 'nullable|max:20'
+            'color' => 'required|not_in:0'
         ];
         $message = [
             'product_name.required' => 'Tên không được để trống',
@@ -103,21 +132,23 @@ class ProductController extends Controller
             'short_description.min' => 'Tóm tắt trích dẫn phải từ 10 ký tự',
             'short_description.max' => 'Tóm tắt trích dẫn không quá 200 ký tự',
             'cate_id.required' => 'Chưa chọn danh mục',
+            'brand.required' => 'Chưa chọn thương hiệu',
+            'color.required' => 'Chưa chọn màu',
             'price.required' => 'Giá không được để trống',
             'price.min' => 'Giá phải lớn hơn hoặc bằng 1.000',
             'price.max' => 'Giá không quá 9.999.999',
             'sell_price.min' => 'Giá khuyến mãi phải lớn hơn hoặc bằng 1.000',
             'sell_price.max' => 'Giá khuyến mãi không quá 9.999.999',
             'amount.max' => 'Số lượng không quá 1000',
-            'brand.max' => 'Không quá 20 ký tự',
             'madein.max' => 'Không quá 30 ký tự',
             'type.max' => 'Không quá 30 ký tự',
             'weight.max' => 'Không quá 3.000 g',
             'new.max' => 'Không quá 100%',
-            'color.max' => 'Không quá 20 ký tự',
             'sell_price.lte' => 'Giá khuyến mãi phải nhỏ hơn giá bán',
             'product_image.image' => 'Ảnh phải có định dang JPG, JPEG, PNG',
-            'product_image.max' => 'Ảnh lớn hơn 2024'
+            'product_image.max' => 'Ảnh lớn hơn 2024',
+            'product_image.required' => 'Ảnh chưa được chọn',
+            'product_image.dimensions' => 'Kích thước ảnh không hợp lệ min 450*600(px)'
         ];
 
         $add = Validator::make($rq->all(), $rule, $message);
@@ -125,6 +156,9 @@ class ProductController extends Controller
             if ($rq->hasFile('product_image')) {
                 $file = $rq->product_image;
                 $filename = time().$file->getClientOriginalName();
+                $path = public_path('assets/image/image_crop/' . $filename);
+                Image::make($file->getRealPath())->crop(450, 600)->save($path);
+
                 $file->move('assets/image/product_image', $filename);
             }
             $product_id = DB::table('products')->insertGetId([
@@ -188,12 +222,12 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:1000|max:9999999',
             'sell_price' => 'nullable|numeric|min:1000|lte:'.$valueprice.'|max:9999999',
             'amount' => 'nullable|numeric|max:1000',
-            'brand' => 'nullable|max:20',
             'madein' => 'nullable|max:30',
             'type' => 'nullable|max:30',
             'weight' => 'nullable|numeric|max:3000',
             'new' => 'nullable|numeric|max:100',
-            'color' => 'nullable|max:20',
+            'brand' => 'required|not_in:0',
+            'color' => 'required|not_in:0',
             'product_image' => 'image:jpg,jpeg,png|max:10000'
         ];
         $message = [
@@ -212,6 +246,8 @@ class ProductController extends Controller
             'short_description.min' => 'Tóm tắt trích dẫn phải từ 10 ký tự',
             'short_description.max' => 'Tóm tắt trích dẫn không quá 200 ký tự',
             'cate_id.required' => 'Chưa chọn danh mục',
+            'brand.required' => 'Chưa chọn thương hiệu',
+            'color.required' => 'Chưa chọn màu',
             'price.required' => 'Giá không được để trống',
             'price.min' => 'Giá phải lớn hơn hoặc bằng 1.000',
             'price.max' => 'Giá không quá 9.999.999',
@@ -219,12 +255,10 @@ class ProductController extends Controller
             'sell_price.max' => 'Giá khuyến mãi không quá 9.999.999',
             'sell_price.lte' => 'Giá khuyến mãi phải nhỏ hơn giá bán',
             'amount.max' => 'Số lượng không quá 1000',
-            'brand.max' => 'Không quá 20 ký tự',
             'madein.max' => 'Không quá 30 ký tự',
             'type.max' => 'Không quá 30 ký tự',
             'weight.max' => 'Không quá 3.000 g',
             'new.max' => 'Không quá 100%',
-            'color.max' => 'Không quá 20 ký tự',
             'product_image.image' => 'Ảnh phải có định dang JPG, JPEG, PNG',
             'product_image.max' => 'Ảnh lớn hơn 1024'
         ];
@@ -237,7 +271,10 @@ class ProductController extends Controller
                 $file_x = $product->product_image;
                 $filename = time().$file->getClientOriginalName();
                 File::delete('assets/image/product_image/'. $file_x);
+                File::delete('assets/image/image_crop/'. $file_x);
                 $file->move('assets/image/product_image', $filename);
+                $path = public_path('assets/image/image_crop/' . $filename);
+                Image::make($file->getRealPath())->crop(450, 600)->save($path);
             }
             if ($rq->hasFile('product_image') == '') {
                 $filename = $product->product_image;
@@ -326,12 +363,39 @@ class ProductController extends Controller
             $listcount = $getShow;
         }
         $category = Categories::where('cate_active', 0)->get();
-        if ($brand != '' || $color != ''){
+        if ($brand != '' && $color != '' && $firstval != '' || $lastval != ''){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
-                ->orwhere('brand', $brand)
-                ->orwhere('color', $color)
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->whereBetween('price', [$firstval, $lastval])
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+        }
+
+        elseif ($brand != '' && $color != ''){
+        $products = DB::table('product_details')
+            ->join('products', 'products.id',
+                '=', 'product_details.product_id')
+            ->where('brand', $brand)
+            ->where('color', $color)
+            ->orderBy($colum, $desc)
+            ->where('product_active', 0)->paginate($listcount);
+        }
+        elseif ($color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+        }
+        elseif ($brand != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('brand', $brand)
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
         }
@@ -372,6 +436,7 @@ class ProductController extends Controller
         $lastval = $rq['lastval'];
         $desc = $rq['desc'];
         $getShow = $rq['value'];
+        $results = '';
         if ($getShow != ''){
             $listcount = $getShow;
         }
@@ -390,14 +455,57 @@ class ProductController extends Controller
             $desc = 'desc';
         }
         $category = Categories::where('cate_active', 0)->get();
-        if ($brand != '' || $color != ''){
+        if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
-                ->orwhere('brand', $brand)
-                ->orwhere('color', $color)
+                ->whereBetween('price', [$firstval, $lastval])
+                ->where('brand', $brand)
+                ->where('color', $color)
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
+
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($brand != '' && $color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+            $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+            return $results;
+            }
+        }
+        elseif ($brand != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('brand', $brand)
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
         }
         elseif ($firstval != '' || $lastval != ''){
             $products = DB::table('product_details')
@@ -406,25 +514,158 @@ class ProductController extends Controller
                 ->whereBetween('price', [$firstval, $lastval])
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
+
+            if (count($products) == 0){
+            $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+            return $results;
+            }
         }
         else {
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
                 ->where('product_name', 'LIKE', "%$result%")
+                ->orwhere('price', 'LIKE', "%$result%")
+                ->orwhere('color', 'LIKE', "%$result%")
+                ->orwhere('brand', 'LIKE', "%$result%")
                 ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+                return view('error.error-search', ['result' => $result]);
+            }
+        }
+
+        if ($rq->ajax()){
+            return response()->json(view('view.product_ajax')->with('products', $products)->render());
+        }
+        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
+    }
+    function saLe(Request $rq){
+        $title ='Sản phẩm';
+        $getShow = $rq['value'];
+        $listcount = 9;
+        $colum = 'products.id';
+        $desc = $rq['desc'];
+        $brand = $rq['brand'];
+        $color = $rq['color'];
+        $firstval = $rq['firstval'];
+        $lastval = $rq['lastval'];
+        if ($desc == ''){
+            $desc = 'asc';
+        }
+        if ($desc == 1){
+            $desc = 'asc';
+            $colum = 'price';
+        }
+        if ($desc == 2){
+            $desc = 'desc';
+            $colum = 'price';
+        }
+        if ($desc == 3){
+            $desc = 'desc';
+        }
+        if ($getShow != ''){
+            $listcount = $getShow;
+        }
+        $results = '';
+        $category = Categories::where('cate_active', 0)->get();
+        if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('product_details.sell_price', '<>', '')
+                ->where ('product_details.sell_price', '<>', NULL)
+                ->whereBetween('sell_price', [$firstval, $lastval])
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($brand != '' && $color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('product_active', 0)
+                ->where('product_details.sell_price', '<>', '')
+                ->where ('product_details.sell_price', '<>', NULL)
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($brand != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('product_active', 0)
+                ->where('product_details.sell_price', '<>', '')
+                ->where ('product_details.sell_price', '<>', NULL)
+                ->where('brand', $brand)
+                ->orderBy($colum, $desc)
+                ->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($color != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('product_active', 0)
+                ->where('product_details.sell_price', '<>', '')
+                ->where ('product_details.sell_price', '<>', NULL)
+                ->where('color', $color)
+                ->orderBy($colum, $desc)
+                ->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        elseif ($firstval != '' || $lastval != ''){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('product_details.sell_price', '<>', '')
+                ->where ('product_details.sell_price', '<>', NULL)
+                ->whereBetween('sell_price', [$firstval, $lastval])
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)
+                ->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+        else {
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)
+                ->where('product_details.sell_price', '<>', '')
+                ->orwhere ('product_details.sell_price', '<>', NULL)
+                ->paginate($listcount);
         }
         if (count($products) == 0){
-            return view('error.error-search', ['result' => $result]);
+            echo $results;
         }
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['title' => $title, 'products' => $products, 'category' => $category]);
+        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
     }
-
     function  AjaxshowProducts(Request $rq){
-        $query = $rq->getData;
+       $query = $rq->getData;
        if ($rq->ajax()){
            if ($query != ''){
                $data = DB::table('product_details')

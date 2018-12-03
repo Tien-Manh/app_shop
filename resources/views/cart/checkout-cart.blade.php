@@ -110,7 +110,11 @@
                                             <div>{{$cart['quantity']}}</div>
                                             <div>{{number_format($cart['price'] * $cart['quantity'], 0,"",".")}} VNĐ</div>
                                         </div>
-                                            <?php $total += $cart['quantity']*$cart['price'] ?>
+                                            @if (!empty($countPoin))
+                                                <?php $total += $cart['quantity']*$cart['price'] * (100 - $countPoin->count_price)/100?>
+                                            @else
+                                                <?php $total += $cart['quantity']*$cart['price']?>
+                                            @endif
                                      @endforeach
                                 @else
                                 <div class="text-center">Giỏ hàng trống</div>
