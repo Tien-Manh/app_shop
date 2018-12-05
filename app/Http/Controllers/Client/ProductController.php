@@ -336,6 +336,7 @@ public static function counCate($id)
     }
 
     function showProducts(Request $rq){
+        $vablier = 'Sản phẩm';
         $title ='Sản phẩm';
         $getShow = $rq['value'];
         $listcount = 9;
@@ -424,7 +425,7 @@ public static function counCate($id)
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
+        return view('view.products', ['vablier' => $vablier, 'results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
     }
     function searchPr(Request $rq){
         $title = 'Tìm kiếm';
@@ -437,6 +438,7 @@ public static function counCate($id)
         $lastval = $rq['lastval'];
         $desc = $rq['desc'];
         $getShow = $rq['value'];
+        $vablier = 'Sản phẩm ' .$result;
         $results = '';
         if ($getShow != ''){
             $listcount = $getShow;
@@ -537,9 +539,10 @@ public static function counCate($id)
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
+        return view('view.products', ['vablier' => $vablier, 'results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
     }
     function saLe(Request $rq){
+        $vablier = 'Giảm giá';
         $title ='Sản phẩm';
         $getShow = $rq['value'];
         $listcount = 9;
@@ -658,7 +661,7 @@ public static function counCate($id)
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
+        return view('view.products', ['vablier' => $vablier, 'results' => $results, 'title' => $title, 'products' => $products, 'category' => $category]);
     }
     function  AjaxshowProducts(Request $rq){
        $query = $rq->getData;

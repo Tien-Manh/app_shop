@@ -1,7 +1,7 @@
 @extends('layout.layout-fontend.index')
 @section('title', $title)
 @section('baner')
-    @include('layout.layout-fontend.baner-sub', ['name_page' => 'Trang Sản Phẩm', 'name_show' => 'Sản phẩm'])
+    @include('layout.layout-fontend.baner-sub', ['name_page' => 'Trang Sản Phẩm', 'name_show' => $vablier])
 @endsection
 @section('contents')
 

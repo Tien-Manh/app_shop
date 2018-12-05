@@ -78,211 +78,40 @@ class CategoriController extends Controller
         $product = [];
         $productsOjb = new Collection();
         $results = '';
+        $productt = [];
+        $vablier = $cate->cate_name;
         if(!empty($cate)) {
-            foreach ($category as $key => $val) {
-                if ($val->parent_id == $cate->id) {
-                    if ($firstval != '' || $lastval != '' && $brand == null && $color == null) {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->whereBetween('price', [$firstval, $lastval])
-                            ->orderBy($colum, $desc)
-                            ->where('product_active', 0)
-                            ->where('cate_id', $val->id)
-                            ->get();
-                    } elseif ($brand != null && $color != null && $firstval != null || $lastval != null) {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->where('cate_id', $val->id)
-                            ->whereBetween('price', [$firstval, $lastval])
-                            ->where('brand', $brand)
-                            ->where('color', $color)
-                            ->orderBy($colum, $desc)
-                            ->where('product_active', 0)
-                            ->get();
-
-                    } elseif ($brand != '' && $color != '') {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->where('product_active', 0)
-                            ->where('brand', $brand)
-                            ->where('color', $color)
-                            ->where('cate_id', $val->id)
-                            ->orderBy($colum, $desc)
-                            ->get();
-                    } elseif ($brand != '') {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->where('cate_id', $val->id)
-                            ->where('product_active', 0)
-                            ->where('brand', $brand)
-                            ->orderBy($colum, $desc)
-                            ->get();
-                    } elseif ($color != '') {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->where('product_active', 0)
-                            ->where('color', $color)
-                            ->where('cate_id', $val->id)
-                            ->orderBy($colum, $desc)
-                            ->get();
-                    } else {
-                        $product[$key] = DB::table('product_details')
-                            ->join('products', 'products.id',
-                                '=', 'product_details.product_id')
-                            ->orderBy($colum, $desc)
-                            ->where('product_active', 0)
-                            ->where('cate_id', $val->id)
-                            ->get();
-                    }
-
-                } else {
-                    if ($firstval != '' || $lastval != '' && $brand == null && $color == null) {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->whereBetween('price', [$firstval, $lastval])
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->where('cate_id', $val->id)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->whereBetween('price', [$firstval, $lastval])
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->where('cate_id', $cate->id)
-                                ->paginate($listcount);
-                        }
-                    } elseif ($brand != null && $color != null && $firstval != null || $lastval != null) {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('cate_id', $val->id)
-                                ->whereBetween('price', [$firstval, $lastval])
-                                ->where('brand', $brand)
-                                ->where('color', $color)
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('cate_id', $cate->id)
-                                ->whereBetween('price', [$firstval, $lastval])
-                                ->where('brand', $brand)
-                                ->where('color', $color)
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->get();
-
-                        }
-                    } elseif ($brand != '' && $color != '') {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('product_active', 0)
-                                ->where('brand', $brand)
-                                ->where('color', $color)
-                                ->where('cate_id', $val->id)
-                                ->orderBy($colum, $desc)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('product_active', 0)
-                                ->where('brand', $brand)
-                                ->where('color', $color)
-                                ->where('cate_id', $cate->id)
-                                ->orderBy($colum, $desc)
-                                ->paginate($listcount);
-                        }
-                    } elseif ($brand != '') {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('cate_id', $val->id)
-                                ->where('product_active', 0)
-                                ->where('brand', $brand)
-                                ->orderBy($colum, $desc)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('product_active', 0)
-                                ->where('brand', $brand)
-                                ->where('cate_id', $cate->id)
-                                ->orderBy($colum, $desc)
-                                ->paginate($listcount);
-
-                        }
-                    } elseif ($color != '') {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('product_active', 0)
-                                ->where('color', $color)
-                                ->where('cate_id', $val->id)
-                                ->orderBy($colum, $desc)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->where('product_active', 0)
-                                ->where('color', $color)
-                                ->where('cate_id', $cate->id)
-                                ->orderBy($colum, $desc)
-                                ->paginate($listcount);
-                        }
-                    } else {
-                        if ($val->parent_id == $cate->id) {
-                            $product[$key] = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->where('cate_id', $val->id)
-                                ->get();
-                        } else {
-                            $products = DB::table('product_details')
-                                ->join('products', 'products.id',
-                                    '=', 'product_details.product_id')
-                                ->orderBy($colum, $desc)
-                                ->where('product_active', 0)
-                                ->where('cate_id', $cate->id)
-                                ->paginate($listcount);
-                        }
-                    }
-
-                }
-            }
+            list($productt, $products, $product) = $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = ['s'], $productsOjb, $cate->id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
         }
-        if (!empty($product)){
-            foreach($product as $items) {
-                foreach($items as $item)
-                {
-                    $perPage = $listcount;
-                    $productsOjb->push($item);
-                    $products = $this->paginate($productsOjb, $perPage);
-                }
-            }
-        }
+       if (!empty($productt) || !empty($product)){
+           foreach($product as $items) {
+               foreach($items as $item)
+               {
+                   $productsOjb->push($item);
+               }
+           }
 
+           foreach ($productt as $val){
+               $productsOjb->push($val);
+           }
+
+           if ($desc == 'asc' && $colum == 'products.id'){
+               $setProductsOjb = $productsOjb->sortBy($colum);
+           }
+
+           elseif ($desc == 'asc' && $colum == 'price'){
+               $setProductsOjb = $productsOjb->sortBy($colum);
+           }
+
+           elseif ($desc == 'desc' && $colum == 'products.id'){
+               $setProductsOjb = $productsOjb->sortByDesc($colum);
+           }
+
+           else{
+               $setProductsOjb = $productsOjb->sortByDesc($colum);
+           }
+           $products = $this->paginate($setProductsOjb, $listcount);
+       }
         if (!empty($product) && count($productsOjb) == 0){
             $products = $this->paginate($productsOjb, 1);
         }
@@ -294,13 +123,261 @@ class CategoriController extends Controller
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
         if (!empty($products)){
-            return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
+            return view('view.products', ['vablier' => $vablier, 'results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
         }
         else{
-            return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate]);
-
+            return view('view.products', ['vablier' => $vablier, 'results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate]);
         }
     }
+   public function forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products, $productsOjb, $cate = 0, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc){
+        foreach ($category as $key => $val) {
+            if ($val->parent_id == $cate) {
+                $id = $val->id;
+                if ($firstval != '' || $lastval != '' && $brand == null && $color == null) {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->whereBetween('price', [$firstval, $lastval])
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $val->id)
+                        ->get();
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->whereBetween('price', [$firstval, $lastval])
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $cate)
+                        ->get();
+                } elseif ($brand != null && $color != null && $firstval != null || $lastval != null) {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $val->id)
+                        ->whereBetween('price', [$firstval, $lastval])
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->get();
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $cate)
+                        ->whereBetween('price', [$firstval, $lastval])
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->get();
+
+                }
+                elseif ($brand != '' && $color != '') {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->where('cate_id', $val->id)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->where('color', $color)
+                        ->where('cate_id', $cate)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                } elseif ($brand != '') {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $val->id)
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('cate_id', $cate)
+                        ->where('product_active', 0)
+                        ->where('brand', $brand)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                } elseif ($color != '') {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('color', $color)
+                        ->where('cate_id', $val->id)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->where('product_active', 0)
+                        ->where('color', $color)
+                        ->where('cate_id', $cate)
+                        ->orderBy($colum, $desc)
+                        ->get();
+                }
+                else {
+                    $product[$key] = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $id)
+                        ->get();;
+                    $productt = DB::table('product_details')
+                        ->join('products', 'products.id',
+                            '=', 'product_details.product_id')
+                        ->orderBy($colum, $desc)
+                        ->where('product_active', 0)
+                        ->where('cate_id', $cate)
+                        ->get();
+                }
+                    $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = [], $productsOjb,  $id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
+            }
+            else {
+                if ($firstval != '' || $lastval != '' && $brand == null && $color == null) {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $val->id)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $cate)
+                            ->paginate($listcount);
+                    }
+                } elseif ($brand != null && $color != null && $firstval != null || $lastval != null) {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('cate_id', $val->id)
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('cate_id', $cate)
+                            ->whereBetween('price', [$firstval, $lastval])
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->get();
+
+                    }
+                } elseif ($brand != '' && $color != '') {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->where('cate_id', $val->id)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('color', $color)
+                            ->where('cate_id', $cate)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+                    }
+                } elseif ($brand != '') {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('cate_id', $val->id)
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('brand', $brand)
+                            ->where('cate_id', $cate)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+
+                    }
+                } elseif ($color != '') {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('color', $color)
+                            ->where('cate_id', $val->id)
+                            ->orderBy($colum, $desc)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->where('product_active', 0)
+                            ->where('color', $color)
+                            ->where('cate_id', $cate)
+                            ->orderBy($colum, $desc)
+                            ->paginate($listcount);
+                    }
+                } else {
+                    if ($val->parent_id == $cate) {
+                        $product[$key] = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $val->id)
+                            ->get();
+                    } else {
+                        $products = DB::table('product_details')
+                            ->join('products', 'products.id',
+                                '=', 'product_details.product_id')
+                            ->orderBy($colum, $desc)
+                            ->where('product_active', 0)
+                            ->where('cate_id', $cate)
+                            ->paginate($listcount);
+                    }
+                }
+            }
+        }
+        return [$productt, $products, $product];
+    }
+
     public function paginate($items, $perPage, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);

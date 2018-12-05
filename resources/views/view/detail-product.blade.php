@@ -8,8 +8,8 @@
             <div class="container">
                 <div class="product-quick-view">
                     <div class="row align-items-center">
-                        <div class="col-lg-6" style="overflow:hidden; width: auto; height: 600px;">
-                            <div class="quick-view-carousel-details" style="overflow: hidden;">
+                        <div class="col-lg-5" style="overflow:hidden; width: 100%; height: 700px;">
+                            <div class="quick-view-carousel-details" style="overflow: hidden;height: 700px;">
                                 <div class="item" style="background: url({{asset('assets/image/product_image/' .$product->product_image)}})">
                                 </div>
                                     @if(count($product_image) > 0)
@@ -23,7 +23,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-7">
                             <div class="quick-view-content">
                                 <div class="top">
                                     <h3 class="head">{{$product->product_name}}</h3>
@@ -44,7 +44,7 @@
                                         </div>
                                         @endif
                                     <div class="category">Danh mục: <span>{{$cateId->cate_name}}</span></div>
-                                    <div class="available">Độ mới: <span>{{$product->new}}%</span></div>
+                                    <div class="available">Mới: <span>{{$product->new}}%</span></div>
                                 </div>
                                 <div class="middle">
                                     <p class="content">{{$product->short_description}}</p>
@@ -256,5 +256,6 @@
                 return false;
             }
         })
+
     </script>
 @endsection

@@ -4218,12 +4218,15 @@ input[type="date"]:not(.has-value):before{
     background: #f9fafc;
     padding: 20px;
 }
+.ttt:hover .sub-nav-menu {
+    display: block;
+}
 /* line 1223, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_home.scss */
 .quick-view-carousel-details .item {
   background-repeat: no-repeat !important;
-  background-size: cover !important;
+    background-size: 100% !important;
   background-position: center center !important;
-  height: 850px;
+  height: 740px;
   display: block;
 }
 
