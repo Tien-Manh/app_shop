@@ -17,9 +17,8 @@
                         <a style="cursor: pointer;" class=""><span class="far fa-heart"> &nbsp @if(count(\App\Likeview::where('prodct_id', $product->id)->get()) == 0) {{''}} @else {{count(\App\Likeview::where('prodct_id', $product->id)->get())}} @endif</span></a>
                     @endif
                     <a href="{{route('view.show.detail', ['id' => $product->product_slug])}}"><span class="lnr lnr-layers"></span></a>
-                    <a href="javascript:" class="hie" style="position: absolute; cursor: wait; left: 50%;background-color: transparent; width: 22%; display: none"><span style="opacity: 0;" class="lnr lnr-cart"></span></a>
+                    <a href="javascript:" class="hie" style="position: absolute; cursor: wait; left: 66%;background-color: transparent; width: 27.5%; display: none"><span style="opacity: 0;" class="lnr lnr-cart"></span></a>
                     <a href="javascript:" class="cartCk" id="{{$product->id}}"><span class="lnr lnr-cart"></span></a>
-                    <a href="#" data-toggle="modal" data-target="#exampleModal"><span class="lnr lnr-frame-expand"></span></a>
                 </div>
             </div>
         </div>

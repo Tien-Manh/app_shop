@@ -43,20 +43,14 @@
                                             <span class="ml-10">{{number_format($product->sell_price)}} VNĐ</span>
                                         </div>
                                         @endif
-                                    <div class="category">Danh mục: <span>Household</span></div>
-                                    <div class="available">Availibility: <span>In Stock</span></div>
+                                    <div class="category">Danh mục: <span>{{$cateId->cate_name}}</span></div>
+                                    <div class="available">Độ mới: <span>{{$product->new}}%</span></div>
                                 </div>
                                 <div class="middle">
                                     <p class="content">{{$product->short_description}}</p>
                                 </div>
                                 <div >
                                     <div class="quantity-container d-flex align-items-center mt-15">
-                                        Số lượng:
-                                        <input type="text" class="quantity-amount ml-15" value="1" />
-                                        <div class="arrow-btn d-inline-flex flex-column">
-                                            <button class="increase arrow" type="button" title="Increase Quantity"><span class="lnr lnr-chevron-up"></span></button>
-                                            <button class="decrease arrow" type="button" title="Decrease Quantity"><span class="lnr lnr-chevron-down"></span></button>
-                                        </div>
 
                                     </div>
                                     <div class="d-flex mt-20">

@@ -168,7 +168,7 @@
                                    @if($value->role >= 1)
                                        <tr id="{{$value->id}}">
                                            <td>{{$value->id}}</td>
-                                           <td>{{$value->avatar}}</td>
+                                           <td><img style="width: 40px;" src="{{asset('assets/image/avatar/' .$value->avatar)}}" alt=""></td>
                                            <td>{{$value->name}}</td>
                                            @if($value->role == 2)
                                                <td>Quản Trị Viên</td>

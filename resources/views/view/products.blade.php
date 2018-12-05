@@ -102,13 +102,15 @@
                         <div class="head">Màu</div>
                         <form action="#">
                             <ul>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="black" name="color" value="black"><label for="black">Đen<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="blue" name="color" value="blue"><label for="blue">Xanh lam<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="gray" name="color" value="gray"><label for="gray">Xám<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="green" name="color" value="green"><label for="green">Xanh lục<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="red" name="color" value="red"><label for="red">Đỏ<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="violet" name="color" value="violet"><label for="violet">Tím<span></span></label></li>
-                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="random" name="color" value="random"><label for="random">Khác<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="black" name="color" value="black"><label for="black">ĐEN<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="white" name="color" value="white"><label for="white">TRẮNG<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="orange" name="color" value="orange"><label for="orange">CAM<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="blue" name="color" value="blue"><label for="blue">XANH LAM<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="gray" name="color" value="gray"><label for="gray">XÁM<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="green" name="color" value="green"><label for="green">XANH LỤC<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="red" name="color" value="red"><label for="red">ĐỎ<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="violet" name="color" value="violet"><label for="violet">TÍM<span></span></label></li>
+                                <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="random" name="color" value="random"><label for="random">KHÁC<span></span></label></li>
                             </ul>
                         </form>
                     </div>

@@ -157,53 +157,53 @@ $('.single-comment .reply').on('click', function(e){
 
 
 
-     if(document.getElementById("js-countdown")){
+     // if(document.getElementById("js-countdown")){
+     //
+     //    var countdown = new Date("October 17, 2018");
+     //
+     //    function getRemainingTime(endtime) {
+     //        var milliseconds = Date.parse(endtime) - Date.parse(new Date());
+     //        var seconds = Math.floor(milliseconds / 1000 % 60);
+     //        var minutes = Math.floor(milliseconds / 1000 / 60 % 60);
+     //        var hours = Math.floor(milliseconds / (1000 * 60 * 60) % 24);
+     //        var days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+     //
+     //    return {
+     //        'total': milliseconds,
+     //        'seconds': seconds,
+     //        'minutes': minutes,
+     //        'hours': hours,
+     //        'days': days
+     //        };
+     //    }
+     //
+     //    function initClock(id, endtime) {
+     //        var counter = document.getElementById(id);
+     //        var daysItem = counter.querySelector('.js-countdown-days');
+     //        var hoursItem = counter.querySelector('.js-countdown-hours');
+     //        var minutesItem = counter.querySelector('.js-countdown-minutes');
+     //        var secondsItem = counter.querySelector('.js-countdown-seconds');
+     //
+     //    function updateClock() {
+     //        var time = getRemainingTime(endtime);
+     //
+     //        daysItem.innerHTML = time.days;
+     //        hoursItem.innerHTML = ('0' + time.hours).slice(-2);
+     //        minutesItem.innerHTML = ('0' + time.minutes).slice(-2);
+     //        secondsItem.innerHTML = ('0' + time.seconds).slice(-2);
+     //
+     //        if (time.total <= 0) {
+     //          clearInterval(timeinterval);
+     //        }
+     //        }
+     //
+     //        updateClock();
+     //        var timeinterval = setInterval(updateClock, 1000);
+     //    }
+     //
+     //    initClock('js-countdown', countdown);
 
-        var countdown = new Date("October 17, 2018");
-
-        function getRemainingTime(endtime) {
-            var milliseconds = Date.parse(endtime) - Date.parse(new Date());
-            var seconds = Math.floor(milliseconds / 1000 % 60);
-            var minutes = Math.floor(milliseconds / 1000 / 60 % 60);
-            var hours = Math.floor(milliseconds / (1000 * 60 * 60) % 24);
-            var days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
-
-        return {
-            'total': milliseconds,
-            'seconds': seconds,
-            'minutes': minutes,
-            'hours': hours,
-            'days': days
-            };
-        }
-
-        function initClock(id, endtime) {
-            var counter = document.getElementById(id);
-            var daysItem = counter.querySelector('.js-countdown-days');
-            var hoursItem = counter.querySelector('.js-countdown-hours');
-            var minutesItem = counter.querySelector('.js-countdown-minutes');
-            var secondsItem = counter.querySelector('.js-countdown-seconds');
-
-        function updateClock() {
-            var time = getRemainingTime(endtime);
-
-            daysItem.innerHTML = time.days;
-            hoursItem.innerHTML = ('0' + time.hours).slice(-2);
-            minutesItem.innerHTML = ('0' + time.minutes).slice(-2);
-            secondsItem.innerHTML = ('0' + time.seconds).slice(-2);
-
-            if (time.total <= 0) {
-              clearInterval(timeinterval);
-            }
-            }
-
-            updateClock();
-            var timeinterval = setInterval(updateClock, 1000);
-        }
-
-        initClock('js-countdown', countdown);
-
-  };
+  // };
 
 
 
@@ -237,7 +237,7 @@ $('.single-comment .reply').on('click', function(e){
                 'min': [ 0 ],
                 '10%': [ 500, 500 ],
                 '50%': [ 4000, 1000 ],
-                'max': [ 10000 ]
+                'max': [ 1000000 ]
             }
         });
 
@@ -283,43 +283,6 @@ $('.single-comment .reply').on('click', function(e){
 
 
 
-    var value,
-        quantity = document.getElementsByClassName('quantity-container');
-
-    function createBindings(quantityContainer) {
-        var quantityAmount = quantityContainer.getElementsByClassName('quantity-amount')[0];
-        var increase = quantityContainer.getElementsByClassName('increase')[0];
-        var decrease = quantityContainer.getElementsByClassName('decrease')[0];
-        increase.addEventListener('click', function () { increaseValue(quantityAmount); });
-        decrease.addEventListener('click', function () { decreaseValue(quantityAmount); });
-    }
-
-    function init() {
-        for (var i = 0; i < quantity.length; i++ ) {
-            createBindings(quantity[i]);
-        }
-    };
-
-    function increaseValue(quantityAmount) {
-        value = parseInt(quantityAmount.value, 10);
-
-        console.log(quantityAmount, quantityAmount.value);
-
-        value = isNaN(value) ? 0 : value;
-        value++;
-        quantityAmount.value = value;
-    }
-
-    function decreaseValue(quantityAmount) {
-        value = parseInt(quantityAmount.value, 10);
-
-        value = isNaN(value) ? 0 : value;
-        if (value > 0) value--;
-
-        quantityAmount.value = value;
-    }
-
-  init();
 
 //------- End Quantity Increase & Decrease Value --------//
 

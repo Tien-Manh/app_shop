@@ -291,7 +291,7 @@
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
-                                                        <select class="table-group-action-input form-control" name="brand">
+                                                        <select class="table-group-action-input form-control fixctrt" name="brand">
                                                             <option selected disabled value="0">Chọn Thương Hiệu ...</option>
                                                             <option @if($product->brand == 'dior') selected @endif value="dior">DIOR</option>
                                                             <option @if($product->brand == 'chanel') selected @endif value="chanel">CHANEL</option>
@@ -358,15 +358,17 @@
 													* </span>
                                                     </label>
                                                     <div class="col-md-10">
-                                                        <select class="table-group-action-input form-control " name="color">
+                                                        <select class="table-group-action-input form-control fixctrt" name="color">
                                                             <option selected disabled value="0">Chọn Màu...</option>
                                                             <option @if($product->color == 'black') selected @endif value="black">Đen</option>
+                                                            <option @if($product->color == 'white') selected @endif value="white">Trắng</option>
+                                                            <option @if($product->color == 'orange') selected @endif value="orange">Cam</option>
                                                             <option @if($product->color == 'blue') selected @endif value="blue">Xanh lam</option>
                                                             <option @if($product->color == 'gray') selected @endif value="gray">Xám</option>
                                                             <option @if($product->color == 'green') selected @endif value="green">Xanh lục</option>
                                                             <option @if($product->color == 'red') selected @endif value="red">Đỏ</option>
                                                             <option @if($product->color == 'violet') selected @endif value="violet">Tím</option>
-                                                            <option @if($product->color == 'random') selected @endif value="random">KHÁC</option>
+                                                            <option @if($product->color == 'random') selected @endif value="random">Khác</option>
                                                         </select>
                                                         <span class="error err_color"></span>
                                                     </div>

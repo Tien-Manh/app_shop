@@ -38,20 +38,20 @@
                                 <h6>{{$cart['name']}}</h6>
                             </div>
                         </div>
-                        <div class="col-md-2 col-6">
-                            <div class="price">{{number_format($cart['price'], 0,"",".")}} VNĐ</div>
+                        <div class="col-md-2 col-6 parentprice">
+                            <div data="{{$cart['price']}}" class="price">{{number_format($cart['price'], 0,"",".")}} VNĐ</div>
                         </div>
-                        <div class="col-md-2 col-6">
+                        <div class="col-md-2 col-6" id="findButtons">
                             <div class="quantity-container d-flex align-items-center mt-15">
-                                <input type="text" class="quantity-amount" value="{{$cart['quantity']}}" />
-                                <div class="arrow-btn d-inline-flex flex-column">
-                                    <button class="increase arrow" type="button" title="Increase Quantity"><span class="lnr lnr-chevron-up"></span></button>
-                                    <button class="decrease arrow" type="button" title="Decrease Quantity"><span class="lnr lnr-chevron-down"></span></button>
+                                <input id="{{$cart['id']}}" type="text" class="quantity-amount getquantity" value="{{$cart['quantity']}}" />
+                                <div data="{{route('show.card')}}" id="findButton" class="arrow-btn d-inline-flex flex-column">
+                                    <button id="nv" class="arrow" type="button" title="Increase Quantity"><span class="lnr lnr-chevron-up"></span></button>
+                                    <button id="pv" class="arrow" type="button" title="Decrease Quantity"><span class="lnr lnr-chevron-down"></span></button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 col-12">
-                            <div class="total">{{number_format($cart['price'] * $cart['quantity'], 0, ',', '.')}} VNĐ</div>
+                        <div class="col-md-2 col-12 parentTotal">
+                            <div data="{{$cart['price'] * $cart['quantity']}}" class="total">{{number_format($cart['price'] * $cart['quantity'], 0, ',', '.')}} VNĐ</div>
                        @if (!empty($countPoin))
                                 <?php $total += $cart['quantity']*$cart['price'] * (100 - $countPoin->count_price)/100?>
                           @else
@@ -96,7 +96,7 @@
         </div>
         <div class="subtotal-area d-flex align-items-center justify-content-end">
             <div class="title text-uppercase">tổng Tất cả</div>
-            <div class="subtotal"><span>{{number_format($total, 0,",",".")}}</span> VNĐ</div>
+            <div data="{{$total}}" class="subtotal"><span>{{number_format($total, 0,",",".")}}</span> VNĐ</div>
             <input type="hidden" id="totalsNumbe" value="{{number_format($total, 0,'', '')}}">
         </div>
         <div class="shipping-area d-flex justify-content-end">

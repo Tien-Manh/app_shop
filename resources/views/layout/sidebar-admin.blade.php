@@ -81,8 +81,8 @@
                         <span class="title">Baner</span>
                     </a>
                 </li>
-                <li class="@if(Request::url() == route('add.codecount')) active @endif">
-                    <a href="{{route('add.codecount')}}">
+                <li class="@if(Request::url() == route('show.codecountpoin') || Request::url() == route('add.codecount')) active @endif">
+                    <a href="{{route('show.codecountpoin')}}">
                         <i class="fal fa-code"></i>
                         <span class="title">Mã giảm giá</span>
                     </a>

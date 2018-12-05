@@ -5,7 +5,8 @@
         <div class="menu-top container">
             <div class="d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="{{route('view.show')}}">
-                    <img src="{{asset('fontend/img/logo.png')}}" alt="">
+                    <div><h3>Top fashion</h3></div>
+                    {{--<img src="{{asset('fontend/img/logo.png')}}" alt="">--}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,7 +26,8 @@
                     @else
                         <li><a href="{{route('login.user')}}">Đăng nhập</a></li>
                     @endif
-                    <li><a href="{{route('show.card')}}"><i class="fa fa-shopping-cart" style="font-size:18px; padding: 0 5px;" aria-hidden="true"></i> <span class="setTotal">
+                    <li class="@if (Request::url() == route('show.card') || Request::url() == route('check.onecart'))gv
+                    @endif"><a href="{{route('show.card')}}"><i class="fa fa-shopping-cart" style="font-size:18px; padding: 0 5px;" aria-hidden="true"></i> <span class="setTotal">
                                 <?php use App\Http\Controllers\Client\HomeController; echo HomeController::totalCart()?>
                             </span></a>
                     </li>

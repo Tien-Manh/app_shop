@@ -176,7 +176,7 @@ class HomeController extends Controller
     }
 
     function  ViewShow(){
-        $categories = Categories::where('cate_active', 0)->where('parent_id', '>', 0)->offset(0)->limit(6)->get();
+        $categories = Categories::where('cate_active', 0)->where('parent_id', '>', 0)->offset(0)->limit(3)->get();
         $products_nam = DB::table('product_details')
             ->join('products', 'products.id',
             '=', 'product_details.product_id')
@@ -196,6 +196,7 @@ class HomeController extends Controller
 
     function viewsDetail($id){
         $productId = Products::where('product_slug', $id)->firstOrFail();
+        $cateId = Categories::find($productId->cate_id);
         $comments = DB::table('users')
             ->join('comments', 'comments.user_id', '=', 'users.id')
             ->where('product_id', $productId->id)
@@ -220,7 +221,7 @@ class HomeController extends Controller
         foreach ($likes as $value){
             $like = $value;
         }
-        return view('view.detail-product', ['comment_repplys' => $comment_repplys, 'comments' => $comments, 'product' => $product, 'product_image' => $product_image, 'like' => $like, 'countLike' => $countLike]);
+        return view('view.detail-product', ['cateId' => $cateId, 'comment_repplys' => $comment_repplys, 'comments' => $comments, 'product' => $product, 'product_image' => $product_image, 'like' => $like, 'countLike' => $countLike]);
     }
 
 
@@ -334,9 +335,27 @@ class HomeController extends Controller
         }
         return redirect()->back();
     }
-    function showCart(){
+    function showCart(Request $rq){
+        $id = $rq['id'];
+        $value = $rq['value'];
         $carts = Session::get('cartshop');
         $getSe = Session::get('countpoin');
+        if (!empty($id)){
+            foreach ($carts as $key => $val){
+                if($id == $val['id']){
+                    $val['quantity'] = $value;
+                    $valarray = $val;
+                    unset($carts[$key]);
+                    $carts[$key] = $valarray;
+                    ksort($carts);
+                    session()->put('cartshop', $carts);
+                    Session::save();
+                }
+         }
+         return response()->json([
+            'success' => true
+         ]);
+        }
         $countPoin =  DB::table('countpoin')->where('code', $getSe)->first();
         $total = 0;
         return view('cart.cart-view', ['countPoin' => $countPoin, 'carts' => $carts, 'total' => $total]);
@@ -618,7 +637,10 @@ class HomeController extends Controller
        $commenrp->delete();
        return redirect()->back();
     }
-
+    function codecountpoinShow(){
+        $counpoint = DB::table('countpoin')->get();
+        return view('admin.admin-counpoint', ['counpoint' => $counpoint]);
+    }
     function codecountAdd(){
         return view('cate.form-code');
     }

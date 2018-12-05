@@ -6,11 +6,11 @@
                 <ul class="navbar-nav ">
                     <!-- Dropdown -->
                     <li class="dropdown">
-                        <a class="@if(Request::url() == route('view.show')) active @endif dropdown-none" href="{{route('view.show')}}" id="navbardrop">Trang chủ</a>
+                        <a class="@if(Request::url() == route('view.show')) actives @endif dropdown-none" href="{{route('view.show')}}" id="navbardrop">Trang chủ</a>
                     </li>
                     @foreach($nav as $val)
                     <li class="dropdown">
-                        <a class="@if(Request::url() == route('show.cates', ['id' => $val->cate_slug])) active @endif dropdown-none" href="{{route('show.cates', ['id' => $val->cate_slug])}}" id="navbardrop">{{$val->cate_name}}</a>
+                        <a class="@if(Request::url() == route('show.cates', ['id' => $val->cate_slug])) actives @endif dropdown-none" href="{{route('show.cates', ['id' => $val->cate_slug])}}" id="navbardrop">{{$val->cate_name}}</a>
                         <div class="dropdown-menu ttt">
                             <ul class="submenu">
                                 <?php echo showNav($subnav, $val->id, '') ?>
@@ -19,10 +19,10 @@
                     </li>
                     @endforeach
                     <li class="dropdown">
-                        <a class="@if(Request::url() == route('show.sale')) active @endif dropdown-none" href="{{route('show.sale')}}" id="navbardrop">Giảm Giá</a>
+                        <a class="@if(Request::url() == route('show.sale')) actives @endif dropdown-none" href="{{route('show.sale')}}" id="navbardrop">Giảm Giá</a>
                     </li>
                     <li class="dropdown">
-                        <a class="@if(Request::url() == route('show.products')) active @endif dropdown-none" href="{{route('show.products')}}" id="navbardrop">Sản phẩm</a>
+                        <a class="@if(Request::url() == route('show.products')) actives @endif dropdown-none" href="{{route('show.products')}}" id="navbardrop">Sản phẩm</a>
                     </li>
                  @include('layout.layout-fontend.search')
                 </ul>

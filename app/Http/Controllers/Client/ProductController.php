@@ -102,8 +102,8 @@ public static function counCate($id)
         $rule = [
             'product_name' => 'required|min:4|max:40|unique:products,product_name',
             'product_slug' => 'required|min:4|max:80|unique:products,product_slug',
-            'description' => 'required|min:10|max:500',
-            'short_description' => 'required|min:10|max:200',
+            'description' => 'required|min:10|max:1000',
+            'short_description' => 'required|min:10|max:400',
             'cate_id' => 'required|not_in:0',
             'price' => 'required|numeric|min:1000|max:9999999',
             'sell_price' => 'nullable|numeric|min:1000|lte:'.$valueprice.'|max:9999999',
@@ -127,10 +127,10 @@ public static function counCate($id)
             'product_slug.unique' => 'Đường dẫn này đã được dùng',
             'description.required' => 'Trích dẫn không được để trống',
             'description.min' => 'Trích dẫn phải từ 10 ký tự',
-            'description.max' => 'Trích dẫn không quá 500 ký tự',
+            'description.max' => 'Trích dẫn không quá 1000 ký tự',
             'short_description.required' => 'Tóm tắt trích dẫn không được để trống',
             'short_description.min' => 'Tóm tắt trích dẫn phải từ 10 ký tự',
-            'short_description.max' => 'Tóm tắt trích dẫn không quá 200 ký tự',
+            'short_description.max' => 'Tóm tắt trích dẫn không quá 400 ký tự',
             'cate_id.required' => 'Chưa chọn danh mục',
             'brand.required' => 'Chưa chọn thương hiệu',
             'color.required' => 'Chưa chọn màu',
@@ -157,7 +157,7 @@ public static function counCate($id)
                 $file = $rq->product_image;
                 $filename = time().$file->getClientOriginalName();
                 $path = public_path('assets/image/image_crop/' . $filename);
-                Image::make($file->getRealPath())->crop(450, 600)->save($path);
+                Image::make($file->getRealPath())->crop(500, 750)->save($path);
 
                 $file->move('assets/image/product_image', $filename);
             }
@@ -216,8 +216,8 @@ public static function counCate($id)
         $rule = [
             'product_name' => 'required|min:4|max:40|unique:products,product_name,'.$rq->id.',id',
             'product_slug' => 'required|min:4|max:80|unique:products,product_slug,'.$rq->id.',id',
-            'description' => 'required|min:10|max:500',
-            'short_description' => 'required|min:10|max:200',
+            'description' => 'required|min:10|max:1000',
+            'short_description' => 'required|min:10|max:400',
             'cate_id' => 'required|not_in:0',
             'price' => 'required|numeric|min:1000|max:9999999',
             'sell_price' => 'nullable|numeric|min:1000|lte:'.$valueprice.'|max:9999999',
@@ -241,10 +241,10 @@ public static function counCate($id)
             'product_slug.unique' => 'Đường dẫn này đã được dùng',
             'description.required' => 'Trích dẫn không được để trống',
             'description.min' => 'Trích dẫn phải từ 10 ký tự',
-            'description.max' => 'Trích dẫn không quá 500 ký tự',
+            'description.max' => 'Trích dẫn không quá 1000 ký tự',
             'short_description.required' => 'Tóm tắt trích dẫn không được để trống',
             'short_description.min' => 'Tóm tắt trích dẫn phải từ 10 ký tự',
-            'short_description.max' => 'Tóm tắt trích dẫn không quá 200 ký tự',
+            'short_description.max' => 'Tóm tắt trích dẫn không quá 400 ký tự',
             'cate_id.required' => 'Chưa chọn danh mục',
             'brand.required' => 'Chưa chọn thương hiệu',
             'color.required' => 'Chưa chọn màu',
@@ -272,9 +272,9 @@ public static function counCate($id)
                 $filename = time().$file->getClientOriginalName();
                 File::delete('assets/image/product_image/'. $file_x);
                 File::delete('assets/image/image_crop/'. $file_x);
-                $file->move('assets/image/product_image', $filename);
                 $path = public_path('assets/image/image_crop/' . $filename);
-                Image::make($file->getRealPath())->crop(450, 600)->save($path);
+                Image::make($file->getRealPath())->crop(500, 750)->save($path);
+                $file->move('assets/image/product_image', $filename);
             }
             if ($rq->hasFile('product_image') == '') {
                 $filename = $product->product_image;
@@ -363,7 +363,15 @@ public static function counCate($id)
             $listcount = $getShow;
         }
         $category = Categories::where('cate_active', 0)->get();
-        if ($brand != '' && $color != '' && $firstval != '' || $lastval != ''){
+        if ($firstval != '' && $brand == null && $color == null){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->whereBetween('price', [$firstval, $lastval])
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+        }
+        else if ($brand != null && $color != null && $firstval != null || $lastval != null){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
@@ -399,14 +407,7 @@ public static function counCate($id)
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
         }
-        elseif ($firstval != '' || $lastval != ''){
-            $products = DB::table('product_details')
-                ->join('products', 'products.id',
-                    '=', 'product_details.product_id')
-                ->whereBetween('price', [$firstval, $lastval])
-                ->orderBy($colum, $desc)
-                ->where('product_active', 0)->paginate($listcount);
-        }
+
         else {
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
@@ -455,21 +456,33 @@ public static function counCate($id)
             $desc = 'desc';
         }
         $category = Categories::where('cate_active', 0)->get();
-        if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
+        if ($firstval != '' && $brand == null && $color == null){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
                 ->whereBetween('price', [$firstval, $lastval])
-                ->where('brand', $brand)
-                ->where('color', $color)
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
-
             if (count($products) == 0){
                 $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
                 return $results;
             }
         }
+        else if ($brand != null && $color != null && $firstval != null || $lastval != null){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->whereBetween('price', [$firstval, $lastval])
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+
         elseif ($brand != '' && $color != ''){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
@@ -505,19 +518,6 @@ public static function counCate($id)
             if (count($products) == 0){
                 $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
                 return $results;
-            }
-        }
-        elseif ($firstval != '' || $lastval != ''){
-            $products = DB::table('product_details')
-                ->join('products', 'products.id',
-                    '=', 'product_details.product_id')
-                ->whereBetween('price', [$firstval, $lastval])
-                ->orderBy($colum, $desc)
-                ->where('product_active', 0)->paginate($listcount);
-
-            if (count($products) == 0){
-            $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
-            return $results;
             }
         }
         else {
@@ -554,11 +554,11 @@ public static function counCate($id)
         }
         if ($desc == 1){
             $desc = 'asc';
-            $colum = 'price';
+            $colum = 'sell_price';
         }
         if ($desc == 2){
             $desc = 'desc';
-            $colum = 'price';
+            $colum = 'sell_price';
         }
         if ($desc == 3){
             $desc = 'desc';
@@ -568,23 +568,33 @@ public static function counCate($id)
         }
         $results = '';
         $category = Categories::where('cate_active', 0)->get();
-        if ($firstval != '' || $lastval != '' && $brand != '' && $color != ''){
+        if ($firstval != '' && $brand == null && $color == null){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
                     '=', 'product_details.product_id')
-                ->where('product_details.sell_price', '<>', '')
-                ->where ('product_details.sell_price', '<>', NULL)
                 ->whereBetween('sell_price', [$firstval, $lastval])
-                ->where('brand', $brand)
-                ->where('color', $color)
                 ->orderBy($colum, $desc)
                 ->where('product_active', 0)->paginate($listcount);
-
             if (count($products) == 0){
                 $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
                 return $results;
             }
         }
+        else if ($brand != null && $color != null && $firstval != null || $lastval != null){
+            $products = DB::table('product_details')
+                ->join('products', 'products.id',
+                    '=', 'product_details.product_id')
+                ->where('brand', $brand)
+                ->where('color', $color)
+                ->whereBetween('sell_price', [$firstval, $lastval])
+                ->orderBy($colum, $desc)
+                ->where('product_active', 0)->paginate($listcount);
+            if (count($products) == 0){
+                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
+                return $results;
+            }
+        }
+
         elseif ($brand != '' && $color != ''){
             $products = DB::table('product_details')
                 ->join('products', 'products.id',
@@ -631,21 +641,7 @@ public static function counCate($id)
                 return $results;
             }
         }
-        elseif ($firstval != '' || $lastval != ''){
-            $products = DB::table('product_details')
-                ->join('products', 'products.id',
-                    '=', 'product_details.product_id')
-                ->where('product_details.sell_price', '<>', '')
-                ->where ('product_details.sell_price', '<>', NULL)
-                ->whereBetween('sell_price', [$firstval, $lastval])
-                ->orderBy($colum, $desc)
-                ->where('product_active', 0)
-                ->paginate($listcount);
-            if (count($products) == 0){
-                $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
-                return $results;
-            }
-        }
+
         else {
             $products = DB::table('product_details')
                 ->join('products', 'products.id',

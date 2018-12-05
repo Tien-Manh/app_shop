@@ -12,7 +12,7 @@
   background-color: #f41068;
   color: #fff;
 }
-.active{
+.actives{
     color: crimson !important;
 }
 /*nav*/
@@ -3207,11 +3207,20 @@ h1, h2, h3, h4, h5, h6 {
 /* line 472, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_home.scss */
 .bottom a {
   display: inline-block;
-  width: 25%;
+  width: 33.333%;
   line-height: 40px;
   text-align: center;
 }
-
+input[type="date"]:not(.has-value):before{
+    color: #777777;
+    content: attr(placeholder);
+}
+.gv{
+    background-color: #f41068;
+}
+.gv > a{
+    color: white;
+}
 /* line 477, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_home.scss */
 .bottom a span {
   color: #fff;
@@ -4202,13 +4211,19 @@ h1, h2, h3, h4, h5, h6 {
 .quick-view-carousel-details {
   position: relative;
 }
-
+.lpp:hover{
+    color: white;
+}
+.my-account-section {
+    background: #f9fafc;
+    padding: 20px;
+}
 /* line 1223, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_home.scss */
 .quick-view-carousel-details .item {
   background-repeat: no-repeat !important;
   background-size: cover !important;
   background-position: center center !important;
-  height: 600px;
+  height: 850px;
   display: block;
 }
 

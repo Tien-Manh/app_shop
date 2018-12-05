@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'author.role'], 'prefix' => 'admin-cp'], 
     Route::post('user/save', 'Client\UserController@saveAuth')->name('save.user');
     Route::post('baner/save', 'Client\HomeController@saveBaner')->name('save.baner');
     Route::post('baner/save-update', 'Client\HomeController@saveBanerUpdate')->name('save.banerUpdate');
+    Route::get('code-countpoin', 'Client\HomeController@codecountpoinShow')->name('show.codecountpoin');
     Route::post('code-countpoin/save', 'Client\HomeController@codecountpoinSave')->name('save.codecountpoin');
 
     Route::get('infor', 'Client\UserController@showInfo')->name('show.info');
@@ -87,6 +88,8 @@ Route::post('save-cart', 'Client\HomeController@saveCart')->name('save.cart');
 Route::group(['middleware' => 'auth'], function (){
   Route::get('like/{id}', 'Client\HomeController@Addlike')->name('add.like');
   Route::get('info', 'Client\UserController@ShowUserInfo')->name('show.infomem');
+  Route::post('change-password/save_password', 'Client\UserController@savePassword')->name('save.pass');
+  Route::get('change-password', 'Client\UserController@ChangePass')->name('change.pass');
 });
 Route::group(['middleware' => ['web']], function (){
     Route::get('add-card', 'Client\HomeController@addCart')->name('add.card');

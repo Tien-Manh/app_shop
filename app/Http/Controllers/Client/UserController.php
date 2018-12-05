@@ -205,11 +205,8 @@ class UserController extends Controller
                 ->where('user_id' ,Auth::user()->id)
                 ->select('name', 'first_name', 'email', 'avatar', 'phone', 'gender', 'province', 'ward')->first();
         }
-        if (empty($user_address)){
-            $show = true;
-            $user_address = new MemberAddress();
-        }
-        return view('view.info', ['show' => $show, 'user' => $user, 'user_address' => $user_address]);
+
+        return view('view.profile-user', ['show' => $show, 'user' => $user, 'user_address' => $user_address]);
     }
     function showInfo(){
         $show = false;
@@ -242,6 +239,14 @@ class UserController extends Controller
             $user_address->ward = $rq->ward;
             $user_address->save();
         }
+        else{
+            $user_address = MemberAddress::where('user_id', $user->id)->first();
+            $user_address->phone = $rq->phone;
+            $user_address->gender = $rq->gender;
+            $user_address->province = $rq->province;
+            $user_address->ward = $rq->ward;
+            $user_address->save();
+        }
         return redirect()->back();
     }
     function saveAvatar(Request $rq){
@@ -261,6 +266,12 @@ class UserController extends Controller
             $user->avatar = $filename;
             $user->save();
             return redirect()->back()->with(['flash_message' => 'Thay avatar thành công']);
+        }
+    }
+    function ChangePass(){
+        if (Auth::user()){
+            $user = Users::find(Auth::user()->id);
+            return view('view.change-pass', ['user' => $user]);
         }
     }
     function savePassword(Request $rq){

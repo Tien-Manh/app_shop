@@ -1,19 +1,21 @@
 $(document).ready(function () {
-    var getTotal = $('#totalsNumbe').val();
     var ship = 50000;
     var dp = 30000;
     $('#flat-rate').click(function (e) {
+        var getTotal = $('#totalsNumbe').val();
         var setTotal = (parseFloat(getTotal) + ship);
         var newValue = String(setTotal).replace(/(.)(?=(\d{3})+$)/g,'$1.');
         $('.subtotal span').text(newValue);
     });
     $('#free-shipping').click(function (e) {
+        var getTotal = $('#totalsNumbe').val();
         var setTotal = parseFloat(getTotal);
         var newValue = String(setTotal).replace(/(.)(?=(\d{3})+$)/g,'$1.');
         $('.subtotal span').text(newValue);
     });
 
     $('#local-delivery').click(function (e) {
+        var getTotal = $('#totalsNumbe').val();
         var setTotal = (parseFloat(getTotal) + dp);
         var newValue = String(setTotal).replace(/(.)(?=(\d{3})+$)/g,'$1.');
         $('.subtotal span').text(newValue);

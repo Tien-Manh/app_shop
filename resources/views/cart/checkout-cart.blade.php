@@ -37,7 +37,7 @@
                         <input @if($address->gender == 'Nữ') checked @endif style="position: relative; top: 5px; left: 10px;" value="Nữ" class="pixel-radio" type="radio" id="local-delivery-n" name="gender">
                     </div>
                     <div class="col-lg-12">
-                        <input name="date_order" type="date" required class="common-input">
+                        <input name="date_order" type="date" required class="common-input" placeholder="Ngày nhận &nbsp;">
                     </div>
                     <div class="col-lg-6">
                         <input name="number_phone" value="{{$address->phone}}" type="text" placeholder="Số điện thoại*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Số điện thoại*'" required class="common-input">
@@ -46,10 +46,10 @@
                         <input name="email" value="{{$user->email}}" type="email" placeholder="Địa chỉ email*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Địa chỉ email*'" required class="common-input">
                     </div>
                     <div class="col-lg-12">
-                        <input name="province" value="{{$address->province}}" type="text" placeholder="Thành phố*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Phường/xã*'" required class="common-input">
+                        <input name="province" value="{{$address->province}}" type="text" placeholder="Thành phố*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Thành phố*'" required class="common-input">
                     </div>
                     <div class="col-lg-12">
-                        <input name="ward" value="{{$address->ward}}" type="text" placeholder="Phường/xã*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Phường/xã*'" required class="common-input">
+                        <input name="ward" value="{{$address->ward}}" type="text" placeholder="Quận/Huyện*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Quận/Huyện*'" required class="common-input">
                     </div>
                     <div class="col-lg-12 mb-10">
                         <input name="commune" type="text" placeholder="Địa chỉ*" onfocus="this.placeholder=''" onblur="this.placeholder = 'Địa chỉ*'" required class="common-input">
