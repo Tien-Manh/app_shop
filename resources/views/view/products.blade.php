@@ -43,7 +43,7 @@
                 <!-- Start Best Seller -->
                 <section class="lattest-product-area pb-40 category-list" style="position: relative">
                     <div class="row" id="single_product">
-                        @if (count($products) > 0)
+                        @if (!empty($products) && count($products) > 0)
                             @include('view.product_ajax')
                         @elseif($results != '')
                             {{$results}}

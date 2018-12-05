@@ -282,9 +282,7 @@ class CategoriController extends Controller
                 }
             }
         }
-        else{
-            $products = [];
-        }
+
         if (!empty($product) && count($productsOjb) == 0){
             $products = $this->paginate($productsOjb, 1);
         }
@@ -295,7 +293,13 @@ class CategoriController extends Controller
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
-        return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
+        if (!empty($products)){
+            return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
+        }
+        else{
+            return view('view.products', ['results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate]);
+
+        }
     }
     public function paginate($items, $perPage, $page = null, $options = [])
     {

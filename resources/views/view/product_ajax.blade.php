@@ -34,7 +34,6 @@
         </div>
     </div>
 @endforeach
-
 <div class="page2 page1">{!! $products->links() !!}</div>
 
 
