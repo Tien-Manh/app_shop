@@ -26,7 +26,12 @@ function showNav($data, $parent = 0, $str = ''){
         $id = $val->id;
         $name = $val->cate_name;
         if ($val->parent_id == $parent){
-            echo '<li><a class="dropdown-item" href="'.route('show.cates', ['id' => $val->cate_slug]).'">' . $str .'<i class="fas fa-angle-right"></i> &nbsp;&nbsp;'.$name . '</a>';
+            if (Request::url() == route('show.cates', ['id' => $val->cate_slug])){
+                echo '<li><a class="actives dropdown-item" href="'.route('show.cates', ['id' => $val->cate_slug]).'">' . $str .'<i class="fas fa-angle-right"></i> &nbsp;&nbsp;'.$name . '</a>';
+            }
+            else{
+                echo '<li><a class="dropdown-item" href="'.route('show.cates', ['id' => $val->cate_slug]).'">' . $str .'<i class="fas fa-angle-right"></i> &nbsp;&nbsp;'.$name . '</a>';
+            }
             echo '<ul class="sub-nav-menu">';
             showNav($data, $id, $str .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
             echo '</ul>';
@@ -34,7 +39,6 @@ function showNav($data, $parent = 0, $str = ''){
         }
     }
 }
-
 
 ?>
 

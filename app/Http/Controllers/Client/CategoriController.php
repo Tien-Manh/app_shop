@@ -5,6 +5,7 @@ use App\Products;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Categories;
+use Illuminate\Support\Facades\Route;
 use Validator;
 use DB;
 use File;
@@ -56,6 +57,7 @@ class CategoriController extends Controller
         $color = $rq['color'];
         $firstval = $rq['firstval'];
         $lastval = $rq['lastval'];
+        $result = $rq['search_product'];
         if ($desc == ''){
             $desc = 'asc';
         }
@@ -79,46 +81,51 @@ class CategoriController extends Controller
         $productsOjb = new Collection();
         $results = '';
         $productt = [];
-        $vablier = $cate->cate_name;
-        if(!empty($cate)) {
-            list($productt, $products, $product) = $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = ['s'], $productsOjb, $cate->id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
+        $setProductsOjb = [];
+        if (!empty($cate)){
+            $vablier = $cate->cate_name;
         }
-       if (!empty($productt) || !empty($product)){
-           foreach($product as $items) {
-               foreach($items as $item)
-               {
-                   $productsOjb->push($item);
-               }
-           }
-
+        else{
+            $vablier = '';
+        }
+        if(!empty($cate)) {
+            list($productt, $products, $product) = $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = [], $productsOjb, $cate->id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
+        }
+        if (!empty($productt) || !empty($product) || count($productt) == 0 || count($product) == 0){
            foreach ($productt as $val){
-               $productsOjb->push($val);
+               $product->push($val);
            }
 
-           if ($desc == 'asc' && $colum == 'products.id'){
-               $setProductsOjb = $productsOjb->sortBy($colum);
+           if ($desc == 'asc' && $colum == 'products.id' && count($product) > 0){
+               $setProductsOjb = $product->sortBy($colum);
            }
 
-           elseif ($desc == 'asc' && $colum == 'price'){
-               $setProductsOjb = $productsOjb->sortBy($colum);
+           elseif ($desc == 'asc' && $colum == 'price' && count($product) > 0){
+               $setProductsOjb = $product->sortBy($colum);
            }
 
-           elseif ($desc == 'desc' && $colum == 'products.id'){
-               $setProductsOjb = $productsOjb->sortByDesc($colum);
+           elseif ($desc == 'desc' && $colum == 'products.id' && count($product) > 0){
+               $setProductsOjb = $product->sortByDesc($colum);
            }
 
-           else{
-               $setProductsOjb = $productsOjb->sortByDesc($colum);
+           else {
+               if (count($product) > 0){
+                   $setProductsOjb = $product->sortByDesc($colum);
+              }
            }
-           $products = $this->paginate($setProductsOjb, $listcount);
+          if (count($setProductsOjb) > 0 || !empty($setProductsOjb)){
+                 $products = $this->paginate($setProductsOjb, $listcount);
+          }
        }
-        if (!empty($product) && count($productsOjb) == 0){
-            $products = $this->paginate($productsOjb, 1);
+
+        if (!empty($product) && count($products) == 0){
+            $products = $this->paginate($setProductsOjb, 1);
         }
         if (!empty($products) && count($products) == 0 && $rq->ajax()){
             $results = '<p class="mt-5" style="font-size: 18px;width: 100%; text-align: center">Không có kết quả nào phù hợp !</p>';
             return $results;
         }
+
         if ($rq->ajax()){
             return response()->json(view('view.product_ajax')->with('products', $products)->render());
         }
@@ -126,7 +133,7 @@ class CategoriController extends Controller
             return view('view.products', ['vablier' => $vablier, 'results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate, 'products' => $products]);
         }
         else{
-            return view('view.products', ['vablier' => $vablier, 'results' => $results, 'category' => $category, 'title' => $title, 'cate' => $cate]);
+            return view('error.error-search', ['vablier' => $vablier, 'result' => $result]);
         }
     }
    public function forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products, $productsOjb, $cate = 0, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc){
@@ -140,7 +147,7 @@ class CategoriController extends Controller
                         ->whereBetween('price', [$firstval, $lastval])
                         ->orderBy($colum, $desc)
                         ->where('product_active', 0)
-                        ->where('cate_id', $val->id)
+                        ->where('cate_id', $id)
                         ->get();
                     $productt = DB::table('product_details')
                         ->join('products', 'products.id',
@@ -154,7 +161,7 @@ class CategoriController extends Controller
                     $product[$key] = DB::table('product_details')
                         ->join('products', 'products.id',
                             '=', 'product_details.product_id')
-                        ->where('cate_id', $val->id)
+                        ->where('cate_id', $id)
                         ->whereBetween('price', [$firstval, $lastval])
                         ->where('brand', $brand)
                         ->where('color', $color)
@@ -180,7 +187,7 @@ class CategoriController extends Controller
                         ->where('product_active', 0)
                         ->where('brand', $brand)
                         ->where('color', $color)
-                        ->where('cate_id', $val->id)
+                        ->where('cate_id', $id)
                         ->orderBy($colum, $desc)
                         ->get();
                     $productt = DB::table('product_details')
@@ -196,7 +203,7 @@ class CategoriController extends Controller
                     $product[$key] = DB::table('product_details')
                         ->join('products', 'products.id',
                             '=', 'product_details.product_id')
-                        ->where('cate_id', $val->id)
+                        ->where('cate_id', $id)
                         ->where('product_active', 0)
                         ->where('brand', $brand)
                         ->orderBy($colum, $desc)
@@ -234,7 +241,7 @@ class CategoriController extends Controller
                         ->orderBy($colum, $desc)
                         ->where('product_active', 0)
                         ->where('cate_id', $id)
-                        ->get();;
+                        ->get();
                     $productt = DB::table('product_details')
                         ->join('products', 'products.id',
                             '=', 'product_details.product_id')
@@ -243,7 +250,14 @@ class CategoriController extends Controller
                         ->where('cate_id', $cate)
                         ->get();
                 }
-                    $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = [], $productsOjb,  $id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
+
+                $this->forCate($rq, $vablier, $results, $title, $category, $product, $productt, $products = [], $productsOjb,  $id, $listcount, $firstval, $lastval, $brand, $color, $colum, $desc);
+                    foreach ($product as $items) {
+                        foreach ($items as $item) {
+                            $productsOjb->push($item);
+                        }
+                    }
+                $productsOjb = $productsOjb->unique();
             }
             else {
                 if ($firstval != '' || $lastval != '' && $brand == null && $color == null) {
@@ -375,7 +389,8 @@ class CategoriController extends Controller
                 }
             }
         }
-        return [$productt, $products, $product];
+
+        return [$productt, $products, $productsOjb];
     }
 
     public function paginate($items, $perPage, $page = null, $options = [])
@@ -509,6 +524,7 @@ class CategoriController extends Controller
             'message' => $add->errors()
         ], 200);
     }
+
 
     function to_slug($str) {
         $str = trim(mb_strtolower($str));

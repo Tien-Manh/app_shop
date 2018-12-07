@@ -18,35 +18,60 @@ use Illuminate\Support\Collection;
 use Intervention\Image\ImageManagerStatic as Image;
 class ProductController extends Controller
 {
-public static function counCate($id)
-    {
-        $category = Categories::where('cate_active', 0)->get();
-        $cate = Categories::where('cate_slug', $id)->first();
+    public static function forCount($category, $cate, $productOjb = [], $products = []){
         foreach ($category as $key => $val) {
-            if ($val->parent_id == $cate->id) {
+            if ($val->parent_id == $cate) {
+                $id = $val->id;
                 $product[$key] = DB::table('product_details')
                     ->join('products', 'products.id',
                         '=', 'product_details.product_id')
                     ->where('product_active', 0)
-                    ->where('cate_id',  $val->id)
+                    ->where('cate_id', $id)
                     ->get();
+                $productt = DB::table('product_details')
+                    ->join('products', 'products.id',
+                        '=', 'product_details.product_id')
+                    ->where('product_active', 0)
+                    ->where('cate_id',  $id)
+                    ->get();
+                self::forCount($category, $id, $productOjb, $products);
+                if (!empty($product) || !empty($productt)){
+                    foreach($product as $items) {
+                        foreach($items as $item)
+                        {
+                            $productOjb->push($item);
+                        }
+
+                    }
+                    foreach ($products as $val){
+                        $productOjb->push($val);
+                    }
+
+                }
+                $productOjb = $productOjb->unique();
+
             }
             else{
                 $products = DB::table('product_details')
                     ->join('products', 'products.id',
                         '=', 'product_details.product_id')
                     ->where('product_active', 0)
-                    ->where('cate_id',  $cate->id)
+                    ->where('cate_id',  $cate)
                     ->get();
             }
         }
-        if (!empty($product)){
-            foreach($product as $items) {
-                foreach($items as $item)
-                {
-                    $products->push($item);
-                }
-            }
+
+        return [$products, $productOjb];
+    }
+    public static function counCate($id)
+    {
+        $category = Categories::where('cate_active', 0)->get();
+        $cate = Categories::where('cate_slug', $id)->first();
+        $productOjb = new Collection();
+        $products = [];
+        list($products, $productOjb) = self::forCount($category, $cate->id, $productOjb, $products);
+        if (!empty($productOjb) && count($productOjb) > 0){
+            $products = $productOjb;
         }
         return count($products);
     }
@@ -438,7 +463,7 @@ public static function counCate($id)
         $lastval = $rq['lastval'];
         $desc = $rq['desc'];
         $getShow = $rq['value'];
-        $vablier = 'Sản phẩm ' .$result;
+        $vablier = 'Sản phẩm với từ khóa: ' .$result;
         $results = '';
         if ($getShow != ''){
             $listcount = $getShow;

@@ -2617,7 +2617,7 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 3px !important;
 }
 .main-categories{
-    max-height: 550px;
+    max-height: 325px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -3217,6 +3217,7 @@ input[type="date"]:not(.has-value):before{
 }
 .gv{
     background-color: #f41068;
+    color: white !important;
 }
 .gv > a{
     color: white;
@@ -6979,6 +6980,9 @@ label {
   font-size: 16px;
   font-weight: 400;
   color: #222222;
+}
+.main-categories{
+    margin-bottom: -25px !important;
 }
 
 /* line 1551, /Applications/MAMP/htdocs/1.monthy projects/29.Shop/scss/theme/_common.scss */

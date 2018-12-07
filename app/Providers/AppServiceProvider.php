@@ -6,6 +6,7 @@ use App\Barner;
 use App\Categories;
 use App\Products;
 use function foo\func;
+use http\Env\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -27,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('cate', $cate);
         });
         view()->composer('layout.layout-fontend.nav-view', function($view){
-            $nav = Categories::where('cate_active', 0)->where('parent_id', 0)->offset(0)->limit(6)->get();
+            $nav = Categories::where('cate_active', 0)->where('parent_id', 0)->offset(0)->limit(4)->get();
             $subnav = Categories::where('cate_active', 0)->where('parent_id', '>', 0)->get();
             $view->with(['nav' => $nav, 'subnav' => $subnav]);
         });

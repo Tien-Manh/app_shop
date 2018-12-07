@@ -71,12 +71,12 @@
                 <!-- End Filter Bar -->
             </div>
             <div class="col-xl-3 col-lg-4 col-md-5">
-                <div class="sidebar-categories">
-                    <div class="head">Danh mục</div>
+                <div style="cursor: pointer" class="sidebar-categories">
+                    <div class="head">Danh mục  <i style="font-weight: bold; font-size: 18px; position: relative; top: 2px;" class="fa fa-angle-down"></i></div>
                     <ul class="main-categories" id="style-4">
                         @if (!empty($category))
                             @foreach ($category as $val)
-                                <li class="main-nav-list"><a href="{{route('show.cates', ['id' => $val->cate_slug])}}" aria-expanded="false" aria-controls="fruitsVegetable"><span class="lnr lnr-arrow-right"></span>{{$val->cate_name}}<span class="number"> ({{\App\Http\Controllers\Client\ProductController::counCate($val->cate_slug)}})</span></a>
+                                <li class="main-nav-list"><a class="@if(Request::url() == route('show.cates', ['id' => $val->cate_slug])) actives @endif" href="{{route('show.cates', ['id' => $val->cate_slug])}}" aria-expanded="false" aria-controls="fruitsVegetable"><span class="lnr lnr-arrow-right"></span>{{$val->cate_name}}<span class="number"> ({{\App\Http\Controllers\Client\ProductController::counCate($val->cate_slug)}})</span></a>
                                 </li>
                             @endforeach
                         @endif
@@ -84,8 +84,8 @@
                 </div>
                 <div class="sidebar-filter mt-50">
                     <div class="top-filter-head">Lọc sản phẩm</div>
-                    <div class="common-filter">
-                        <div class="head">Nhãn hiệu</div>
+                    <div style="cursor: pointer;" class="common-filter">
+                        <div class="head gh">Nhãn hiệu  <i style="font-weight: bold; font-size: 20px; position: relative; top: 1px;" class="fa fa-angle-down"></i></div>
                         <form>
                             <ul>
                                 <li class="filter-list"><input class="pixel-radio brand-radio" type="radio" value="dior" id="apple" name="brand"><label for="apple">DIOR<span></span></label></li>
@@ -98,8 +98,8 @@
                             </ul>
                         </form>
                     </div>
-                    <div class="common-filter">
-                        <div class="head">Màu</div>
+                    <div style="cursor: pointer;" class="common-filter">
+                        <div class="head gh">Màu  <i style="font-weight: bold; font-size: 20px; position: relative; top: 1px;" class="fa fa-angle-down"></i></div>
                         <form action="#">
                             <ul>
                                 <li class="filter-list"><input class="pixel-radio color-radio" type="radio" id="black" name="color" value="black"><label for="black">ĐEN<span></span></label></li>
@@ -137,4 +137,33 @@
     <script src="{{asset('js/products-ajax.js')}}"></script>
     <script src="{{asset('fontend/js/g.js')}}"></script>
     <script src="{{asset('js/addcar.js')}}"></script>
+    <script>
+        $('.sidebar-categories .head').click(function () {
+            $(this).next('.main-categories').toggle(200);
+            var getA = $(this).children('.fa').attr('class')
+            if (getA == 'fa fa-angle-down') {
+                $(this).children('.fa').addClass('fa-angle-up')
+                $(this).children('.fa').removeClass('fa-angle-down')
+            }
+            else {
+                $(this).children('.fa').addClass('fa-angle-down')
+                $(this).children('.fa').removeClass('fa-angle-up')
+            }
+
+        });
+
+        $('.gh').click(function () {
+            $(this).next('form').toggle(200);
+            var getA = $(this).children('.fa').attr('class')
+            if (getA == 'fa fa-angle-down') {
+                $(this).children('.fa').addClass('fa-angle-up')
+                $(this).children('.fa').removeClass('fa-angle-down')
+            }
+            else {
+                $(this).children('.fa').addClass('fa-angle-down')
+                $(this).children('.fa').removeClass('fa-angle-up')
+            }
+
+        })
+    </script>
 @endsection

@@ -17,7 +17,8 @@
                 </ul> -->
                 <ul class="list">
                     @if(Auth::user() && Auth::user()->active == 0)
-                       <li style="position: relative; z-index: 1200" class="show"><a style="color: #0b0b0b; cursor: pointer" class="lk">{{Auth::user()->name}}</a>
+                       <li style="position: relative; z-index: 1200" class="show"><a style="color: #0b0b0b; cursor: pointer" class="@if (Request::url() == route('show.infomem'))gv
+                    @endif lk">{{Auth::user()->name}}</a>
                            <ul class="ul-sub">
                                <li class="lhs"><a class="lhs" href="{{route('show.infomem')}}"><i class="far fa-user lhs" style="position: relative; top: 0px; padding-right: 10px; left: -3px;"></i> Thông tin</a></li>
                                <li class="lhs"><a class="lhs" href="{{route('logout.user')}}"><i class="fal fa-sign-out lhs" style="position: relative; top: 0px; padding-right: 10px; left: -3px;"></i> Đăng xuất</a></li>

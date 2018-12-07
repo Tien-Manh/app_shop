@@ -159,3 +159,12 @@ $('#findButton button').on('click', function (e) {
         }
     })
 });
+$('#keyUpsr').val('');
+$('.search-menu button').on('click', function (e) {
+    var getVal = $('#keyUpsr').val();
+    if (getVal == ''){
+        e.preventDefault();
+        alert('Bạn chưa nhập dữ liệu !');
+    }
+
+});

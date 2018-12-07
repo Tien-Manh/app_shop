@@ -67,6 +67,17 @@
        });
    });
 
+         $(document).ready(function () {
+             $( ".dropdown-item" ).each(function( index ) {
+                 if($(this).attr('class') == 'actives dropdown-item'){
+                    $(this).parents('.dropdown').find('.dropdown-none').addClass('actives');
+                    $(this).parents('.sub-nav-menu').prev('.dropdown-item').addClass('actives');
+                 console.log($(this).parents('.dropdown').find('.dropdown-none'));
+                 }
+             });
+           
+         })
+
 </script>
 
 @yield('myjs')
