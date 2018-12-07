@@ -4,7 +4,6 @@
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/fav.png')}}">
     <!-- Author Meta -->
     <meta name="author" content="CodePixar">
     <!-- Meta Description -->
@@ -15,7 +14,7 @@
     <meta charset="UTF-8">
     <!-- Site Title -->
     <title>Shop | @yield('title')</title>
-
+    <link rel="shortcut icon" href="//theme.hstatic.net/1000122945/1000383215/14/favicon.png?v=8176" type="image/png" />
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
     <!--
     CSS
@@ -75,7 +74,7 @@
                  console.log($(this).parents('.dropdown').find('.dropdown-none'));
                  }
              });
-           
+
          })
 
 </script>
