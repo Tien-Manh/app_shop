@@ -1,0 +1,177 @@
+
+.toggle-button-demo {
+  text-align: center;
+}
+.delimg {
+    position:relative;
+    top:8px;
+    right:25px;
+    background:black;
+    color:white;
+    border-radius:50px;
+    font-size:0.9em;
+    padding: 0 0.3em 0;
+    text-align:center;
+    cursor:pointer;
+}
+article
+{
+    width: 100%;
+    margin:auto;
+    margin-top:10px;
+}
+.radio{
+    top: -5px;
+    left: -17px;
+    position: relative;
+}
+.radio-inline {
+    width: 100px;
+}
+.delimg{
+    position: relative;
+    cursor: pointer;
+    float: left;
+}
+.file {
+    position: relative;
+}
+.file label {
+    background: #39D2B4;
+    padding: 5px 30px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: all .4s;
+}
+.file input {
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    top: 0;
+    opacity: 0.01;
+    cursor: pointer;
+}
+.file input:hover + label,
+.file input:focus + label {
+    background: #34495E;
+    color: #39D2B4;
+}
+
+
+.thumbnail{
+    float: left;
+    width:70px;
+    height: 70px;
+}
+
+
+.toggle-ios {
+  display: none;
+}
+.radio {
+    top: 0px;
+    left: -7px;
+}
+
+.toggle-ios:checked + .toggle-btn::before{
+  content: 'Off';
+  font-size: 9px;
+  display: block;
+  position: absolute;
+  left: 5px;
+  color: white;
+  margin-top: 2px;
+}
+.toggle-btn span{
+  position: absolute;
+  right: 5px;
+  color: white;
+  font-size: 9px;
+  margin-top: 2px;
+}
+.toggle-ios + .toggle-btn {
+  outline: 0;
+  display: block;
+  width: 3em;
+  margin: 0 auto;
+  height: 1.6em;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: crimson;
+  border-radius: 2em !important;
+  padding: 2px;
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+  border: 1px solid #e8eae9;
+}
+.toggle-ios + .toggle-btn:after {
+  position: relative;
+  display: block;
+  content: "";
+  width: 35%;
+  top: 2px;
+  height: 80%;
+  left: 2px;
+  border-radius: 2em;
+  background: #fbfbfb;
+  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08);
+}
+.toggle-ios:checked + .toggle-btn {
+  background: #3598dc;
+}
+.toggle-ios:checked + .toggle-btn:after {
+  left: 58%;
+}
+
+.confirmation-modal .modal-body{
+    font-size: 18px;
+}
+
+#style-4::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #364150;
+}
+
+#style-4::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #364150;
+}
+
+#style-4::-webkit-scrollbar-thumb
+{
+    background-color: #333333;
+    border: 2px solid #364150;
+}
+.successs{
+    height: 42px;
+    padding: 10px;
+    background: white;
+    margin-left: 5px;
+    border: 1px solid gainsboro;
+    display: none;
+}
+.successErr{
+    color: #26a69a;
+    font-size: 15px;
+    font-weight: inherit;
+}
+.error{
+    color: crimson;
+    position: relative;
+    top: 7px;
+}
+.fixct{
+    width: 700px !important;
+}
+
+
+/*dang ky*/
+
